@@ -1,0 +1,11 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-17",
+            "path": "C:/Program Files/Java/jdk-17_windows-x64_bin/jdk-17.0.9",
+            "default": true
+        }
+    ],
+    "java.compile.nullAnalysis.mode": "disabled"
+}

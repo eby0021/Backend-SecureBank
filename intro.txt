@@ -1,0 +1,18 @@
+Banking prototyping system (it will run locally and should be fully functional.
+ Mainly being developed for university semester project only so no need to
+deploy etc or go to some extra level). Each user has two types of accounts
+ in it by default: saving and every day account. Every day account can be
+used to pay bills (we use term BPAY for it), pay someone (via account
+ number or Pay ID). Savings account can only be used to transfer funds 
+internally meaning transfer to user's own checking account only. Each 
+bill has biller code (of an organization like gas company), reference
+number and biller nickname. Transaction has a unique identifier TRX ID.
+Customers sign up using email address as unique identifer. Each customer
+can have either no pay ID or only one pay ID. If you want to transfer 
+someone via pay ID then you just enter its phone number and the system 
+ whether they have pay id registered or not. Suppose a customer has bank 
+accounts in 3 banking systems. They can have either pay id as null or 
+associate it with one of the three accounts. It's a one to one relationship
+ between pay ID and customer. There is also chatbot which help users navigate
+in the system and help with other banking related questions. Technologies
+used will be Express JS, React JS, MySQL and RiveSript(Chatbot)

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="select.system.dao.UserMapper">
+    <resultMap id="UserMap" type="select.system.dto.User">
+        <id property="userId" column="userId"/>
+        <result property="firstName" column="firstName"/>
+        <result property="lastName" column="lastName"/>
+        <result property="middleName" column="middleName"/>
+        <result property="dateOfBirth" column="dateOfBirth"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="payId" column="payId"/>
+        <result property="mobileNumber" column="mobileNumber"/>
+        <result property="token" column="token"/>
+        <result property="accountNumber" column="accountNumber"/>
+        <result property="accountMoney" column="accountMoney"/>
+        <!-- Add other fields here -->
+    </resultMap>
+
+    <select id="selectByName" resultType="User">
+        select * from sys_user where email = #{email}
+    </select>
+
+    <select id="selectById" resultType="User">
+        select * from sys_user where userId = #{userId}
+    </select>
+
+ <select id="selectByEmail" resultType="User">
+        select * from sys_user where email = #{email}
+    </select>
+    <select id="selectAll" resultType="User">
+        select * from sys_user
+    </select>
+  <!-- <select id="loginCheck" resultType="User">
+        select * from sys_user where email = #{email} and password = #{password}
+    </select> -->
+<insert id="insertOne" parameterType="select.system.dto.User">
+        insert into sys_user (firstName, lastName, middleName, dateOfBirth, email, password, payId, mobileNumber, token, accountMoney)
+        values ( #{firstName}, #{lastName}, #{middleName}, #{dateOfBirth}, #{email}, #{password}, #{payId}, #{mobileNumber}, #{token}, #{accountMoney})
+    </insert>
+
+    <!-- Include the other SQL statements as needed -->
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+    <insert id="insertMany">
+    insert into sys_user(id,username,password)
+    values
+    <foreach collection="list" item="user" index="index" separator=",">
+        (#{user.id} , #{user.userName},#{user.password})
+    </foreach>
+    </insert>
+
+    <update id="updateOne">
+        update sys_user set username = #{userName} where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_user where id = #{id}
+    </delete>
+
+    <select id="SelectByStartIndexAndPageSize" resultType="User">
+        select * from sys_user  limit #{param1} , #{param2}
+    </select>
+
+    <select id="selectByMap" resultType="User">
+        select * from sys_user limit #{startIndex} , #{pageSize}
+    </select>
+
+    <select id="SelectByPageBean" resultType="User">
+        select * from sys_user limit #{startIndex} , #{pageSize}
+    </select>
+
+    <select id="selectByLike" resultType="User">
+        select * from sys_user
+        where username like "%"#{keywords}"%"
+        limit #{startIndex} , #{pageSize}
+    </select>
+    <select id="selectByUserName" resultType="User">
+        select * from sys_user where username = #{userName}
+    </select>
+
+    <update id="updateAccountOut">
+        update sys_user set account = (account - #{accountMoney}) where username = #{userName}
+    </update>
+
+    <update id="updateAccountIn">
+        update sys_user set account = (account + #{accountMoney}) where username = #{userName}
+    </update>
+
+    <insert id="accountOutInsert">
+        insert into trasf_record
+        ( username , old_account ,transaction_amount , new_account , target_account , account_type )
+        values
+        ( #{userName} ,#{account} , #{accountMoney} , (#{account} - #{accountMoney}) , #{targetAccount} , #{accountType})
+    </insert>
+
+    <insert id="accountInInsert">
+        insert into trasf_record
+        (username , old_account ,transaction_amount , new_account , target_account , account_type )
+        values
+        (#{userName} ,#{account} , #{accountMoney} , (#{account} + #{accountMoney}) , #{targetAccount} , #{accountType})
+    </insert>
+
+</mapper> -->
