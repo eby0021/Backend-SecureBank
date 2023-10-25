@@ -52,6 +52,15 @@ public class User {
     @Column(name = "token", nullable = true)
     private String token;
 
+    // private Account account;
+
+    // public Account getAccount() {
+    //     return account;
+    // }
+
+    // public void setAccount(Account account) {
+    //     this.account = account;
+    // }
 
 
     @Column(name = "accountNumber", unique = true)

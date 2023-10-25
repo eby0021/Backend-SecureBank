@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import select.base.Result;
 import select.constants.BaseEnums;
 import select.system.dto.User;
+import select.system.dto.LoginRequest;
 import select.system.service.UserService;
 import select.util.PageBean;
 import select.util.Results;
@@ -46,11 +47,7 @@ public class UserController {
     public Result selectAll(){
         return Results.successWithData(userService.selectAll() , BaseEnums.SUCCESS.code()) ;
     }
-    @PostMapping("/insertOne")
-    public Result insertOne(@RequestBody User user){
-        return Results.successWithData(userService.insertOne(user) , BaseEnums.SUCCESS.code()) ;
-
-    }
+    
     @PostMapping("/insertMany")
     public Result insertMany(@RequestBody List<User> userList){
         return Results.successWithData(userService.insertMany(userList) , BaseEnums.SUCCESS.code()) ;
@@ -115,14 +112,19 @@ public class UserController {
     //     return Results.successWithData(userService.login(String email, String password) , BaseEnums.SUCCESS.code()) ;
     // }
 
-    @GetMapping("/loginCheck")
-    public Result loginCheck(@RequestParam("email") String email, @RequestParam("password")
-     String password, HttpServletResponse response) {
-        return Results.successWithData(userService.loginCheck(email, password, response), 
-        BaseEnums.SUCCESS.code()) ;
+    @PostMapping("/loginCheck")
+    public Result loginCheck(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        System.out.println("I am in userController");
+        return Results.successWithData(userService.loginCheck(loginRequest.getEmail(), loginRequest.getPassword(), response), 
+            BaseEnums.SUCCESS.code());
     }
     
+    
+@PostMapping("/insertOne")
+    public Result insertOne(@RequestBody User user){
+        return Results.successWithData(userService.insertOne(user) , BaseEnums.SUCCESS.code()) ;
 
+    }
     //query  transfer  save  withdraw
     //query
     

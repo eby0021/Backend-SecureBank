@@ -98,17 +98,17 @@ public class UserServiceImpl implements UserService {
         }else if(!user1.getPassword().equals(password)){
             return Results.failure("Password incorrect") ;
         }
-        Jedis jedis = jedisUtil.getSource() ;
-        String jedisKey = jedis.get(email) ;
-        if(jedisKey != null){
-            jedisUtil.delString(email);
-        }
-        String token = tokenUtil.generateToken(user1) ;
-        System.out.println("token:" + token);
-        user1.setToken(token);
-        // Set the token in the response header
-        response.setHeader("Authorization", token);
-        jedisUtil.tokenToJedis(user1);
+        // Jedis jedis = jedisUtil.getSource() ;
+        // String jedisKey = jedis.get(email) ;
+        // if(jedisKey != null){
+        //     jedisUtil.delString(email);
+        // }
+        // String token = tokenUtil.generateToken(user1) ;
+        // System.out.println("token:" + token);
+        // user1.setToken(token);
+        // // Set the token in the response header
+        // response.setHeader("Authorization", token);
+        // jedisUtil.tokenToJedis(user1);
         return Results.successWithData(user1);
     }
 

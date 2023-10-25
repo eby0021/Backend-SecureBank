@@ -2,8 +2,10 @@ package select.util;
 
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ScanParams;
-import redis.clients.jedis.ScanResult;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.resps.ScanResult;
+// import redis.clients.jedis.ScanParams;
+// import redis.clients.jedis.ScanResult;
 import select.base.Constants;
 import select.system.dto.User;
 
