@@ -9,7 +9,9 @@ import select.base.Result;
 import select.constants.BaseEnums;
 import select.constants.TransactionType;
 import select.system.dao.UserMapper;
+import select.system.dao.AccountMapper;
 import select.system.dto.User;
+import select.system.dto.Account;
 import select.system.service.UserService;
 import select.util.JedisUtil;
 import select.util.PageBean;
@@ -41,6 +43,9 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper ;
 
     @Autowired
+    AccountMapper accountMapper ;
+
+    @Autowired
     TokenUtil tokenUtil ;
 
     @Autowired
@@ -59,8 +64,17 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean insertOne(User user) {
-        System.out.println("hello I am in UserServiceImpl class s function insertOne");
-        return userMapper.insertOne(user) ;
+      //  System.out.println("hello I am in UserServiceImpl class s function insertOne");
+        boolean result = userMapper.insertOne(user) ;
+        if(result==true){
+            User resultObj = userMapper.selectByEmail(user.getEmail());
+            System.out.println("UserID is: "+resultObj.getUserId());
+            accountMapper.insertOne(resultObj.getUserId());
+        }
+      
+
+
+        return result;
     }
 
     public boolean insertMany(List<User> userList) {
@@ -95,7 +109,7 @@ public class UserServiceImpl implements UserService {
         User user1 = userMapper.selectByEmail(email) ;
         if(user1 == null ){
             return Results.failure("User does not exist") ;
-        }else if(!user1.getPassword().equals(password)){
+        }else if(!user1.getuserPassword().equals(password)){
             return Results.failure("Password incorrect") ;
         }
         // Jedis jedis = jedisUtil.getSource() ;
@@ -112,87 +126,116 @@ public class UserServiceImpl implements UserService {
         return Results.successWithData(user1);
     }
 
+
+    public boolean payByAccountNumber(int destAcc, int bsbsNumber, double amount, int userID){
+        Account destAccountObj = accountMapper.selectByAccountNumber(destAcc);
+        double currAmount = destAccountObj.getAmount();
+        if(bsbsNumber == destAccountObj.getBsbNumber()){
+            Account senderAccount = accountMapper.selectByUserID(userID);
+            if(senderAccount != null){
+                double senderAmount = senderAccount.getAmount();
+                if(senderAmount >= amount){
+                    senderAccount.setAmount(senderAmount - amount);
+                    destAccountObj.setAmount(currAmount + amount);
+                    return true;
+                } else{
+                    System.out.println("Insufficient funds");
+                    return false;
+                }
+            } else{
+                System.out.println("sender's userID does not match with any account");
+                return false;
+            }
+         
+        } else{
+            System.out.println("Incorrect bsb number");
+            return false;
+        }
+    }
+
+
+
     //query
     public User selectByEmail(String email) {
         return userMapper.selectByEmail(email) ;
     }
 
     //transfer
-    public String transferAccount(double accountMoney , int targetAccount , HttpServletRequest request){
-        Jedis jedis = jedisUtil.getSource() ;
-        String token = request.getHeader("token") ;
-        String email = jedis.get(token) ;
-        User user = userMapper.selectByEmail(email) ;
-        double nowAccountMoney = user.getAccountMoney() ;
-        if(accountMoney > nowAccountMoney){
-            return "余额不足" ;
-        }
-        User user1 = userMapper.selectByAccountNumber(targetAccount) ;
-        if (user1.equals(null)){
-            return "对方账户不存在" ;
-        }
-        //转出账户余额更新
-        boolean result = userMapper.updateAccountOut(accountMoney , email) ;
-        //转入账户余额更新
-        boolean result1 = userMapper.updateAccountIn(accountMoney , user1.getEmail()) ;
-        if ((result == false)||(result1 == false) ){
-            return "转账操作失败" ;
-        }
-        //转账记录生成------------
-        //String accountType = TransactionType.WITHDRAWMONEY ;
-        //出账记录生成
-        boolean insertReult = userMapper.accountOutInsert(email ,user.getAccountNumber() ,  accountMoney , targetAccount , TransactionType.WITHDRAWMONEY ) ;
-        //入账记录生成
-        //String accountType1 = TransactionType.SAVEMONEY ;
-        boolean insertReult1 = userMapper.accountInInsert(email ,user.getAccountNumber() ,  accountMoney , targetAccount , TransactionType.SAVEMONEY  ) ;
+    // public String transferAccount(double accountMoney , int targetAccount , HttpServletRequest request){
+    //     Jedis jedis = jedisUtil.getSource() ;
+    //     String token = request.getHeader("token") ;
+    //     String email = jedis.get(token) ;
+    //     User user = userMapper.selectByEmail(email) ;
+    //     double nowAccountMoney = user.getAccountMoney() ;
+    //     if(accountMoney > nowAccountMoney){
+    //         return "余额不足" ;
+    //     }
+    //     User user1 = userMapper.selectByAccountNumber(targetAccount) ;
+    //     if (user1.equals(null)){
+    //         return "对方账户不存在" ;
+    //     }
+    //     //转出账户余额更新
+    //     boolean result = userMapper.updateAccountOut(accountMoney , email) ;
+    //     //转入账户余额更新
+    //     boolean result1 = userMapper.updateAccountIn(accountMoney , user1.getEmail()) ;
+    //     if ((result == false)||(result1 == false) ){
+    //         return "转账操作失败" ;
+    //     }
+    //     //转账记录生成------------
+    //     //String accountType = TransactionType.WITHDRAWMONEY ;
+    //     //出账记录生成
+    //     boolean insertReult = userMapper.accountOutInsert(email ,user.getAccountNumber() ,  accountMoney , targetAccount , TransactionType.WITHDRAWMONEY ) ;
+    //     //入账记录生成
+    //     //String accountType1 = TransactionType.SAVEMONEY ;
+    //     boolean insertReult1 = userMapper.accountInInsert(email ,user.getAccountNumber() ,  accountMoney , targetAccount , TransactionType.SAVEMONEY  ) ;
 
-        if((insertReult == false) || (insertReult1 == false)){
-            return "转账记录生成失败" ;
-        }
+    //     if((insertReult == false) || (insertReult1 == false)){
+    //         return "转账记录生成失败" ;
+    //     }
 
-        return "转账成功！" ;
-    }
+    //     return "转账成功！" ;
+    // }
 
     //存钱
-    public String saveMoney(double accountMoney , HttpServletRequest request){
-        Jedis jedis = jedisUtil.getSource() ;
-        String token = request.getHeader("token") ;
-        String email = jedis.get(token) ;
-        User user = userMapper.selectByEmail(email) ;
-        //存入余额更新
-        boolean result = userMapper.updateAccountIn(accountMoney , email) ;
-        if(result = false){
-            return "存入失败" ;
-        }
-        //存入记录生成
-        boolean insertResult = userMapper.accountInInsert(email , user.getAccountNumber() , accountMoney, TransactionType.SAVEMONEY) ;
-        if((insertResult == false)){
-            return "入账记录生成失败" ;
-        }
-        return "Save" + accountMoney + " AUD successfully"  ;
-    }
+    // public String saveMoney(double accountMoney , HttpServletRequest request){
+    //     Jedis jedis = jedisUtil.getSource() ;
+    //     String token = request.getHeader("token") ;
+    //     String email = jedis.get(token) ;
+    //     User user = userMapper.selectByEmail(email) ;
+    //     //存入余额更新
+    //     boolean result = userMapper.updateAccountIn(accountMoney , email) ;
+    //     if(result = false){
+    //         return "存入失败" ;
+    //     }
+    //     //存入记录生成
+    //     boolean insertResult = userMapper.accountInInsert(email , user.getAccountNumber() , accountMoney, TransactionType.SAVEMONEY) ;
+    //     if((insertResult == false)){
+    //         return "入账记录生成失败" ;
+    //     }
+    //     return "Save" + accountMoney + " AUD successfully"  ;
+    // }
 
     //取钱
-    public String withdrawMoney(double accountMoney , HttpServletRequest request){
-        Jedis jedis = jedisUtil.getSource() ;
-        String token = request.getHeader("token") ;
-        String email = jedis.get(token) ;
-        User user = userMapper.selectByEmail(email) ;
-        double nowAccountMoney = user.getAccountNumber() ;
-        if(accountMoney > nowAccountMoney){
-            return "Insufficient balance" ;
-        }
-        boolean result = userMapper.updateAccountOut(accountMoney , email) ;
-        if(result = false){
-            return "Withdrawal failure" ;
-        }
-        //出账记录生成
-        boolean insertResult = userMapper.accountOutInsert(email ,user.getAccountNumber() , accountMoney , TransactionType.WITHDRAWMONEY) ;
-        if((insertResult == false)){
-            return "出账记录生成失败" ;
-        }
-        return "Withdraw" + accountMoney + " AUD successfully"  ;
-    }
+    // public String withdrawMoney(double accountMoney , HttpServletRequest request){
+    //     Jedis jedis = jedisUtil.getSource() ;
+    //     String token = request.getHeader("token") ;
+    //     String email = jedis.get(token) ;
+    //     User user = userMapper.selectByEmail(email) ;
+    //     double nowAccountMoney = user.getAccountNumber() ;
+    //     if(accountMoney > nowAccountMoney){
+    //         return "Insufficient balance" ;
+    //     }
+    //     boolean result = userMapper.updateAccountOut(accountMoney , email) ;
+    //     if(result = false){
+    //         return "Withdrawal failure" ;
+    //     }
+    //     //出账记录生成
+    //     boolean insertResult = userMapper.accountOutInsert(email ,user.getAccountNumber() , accountMoney , TransactionType.WITHDRAWMONEY) ;
+    //     if((insertResult == false)){
+    //         return "出账记录生成失败" ;
+    //     }
+    //     return "Withdraw" + accountMoney + " AUD successfully"  ;
+    // }
 
     public Result signup(User user) {
         try {

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import select.base.Result;
 import select.constants.BaseEnums;
 import select.system.dto.User;
+import select.system.dto.PayByAccountNumberReq;
 import select.system.dto.LoginRequest;
 import select.system.service.UserService;
 import select.util.PageBean;
@@ -125,29 +126,34 @@ public class UserController {
         return Results.successWithData(userService.insertOne(user) , BaseEnums.SUCCESS.code()) ;
 
     }
+    @PostMapping("/payByAccountNumber")
+    public Result payByAccountNumber(@RequestBpdy PayByAccountNumberReq req, @RequestParam("userID") int userID,  HttpServletResponse response){
+        return Results.successWithData(userService.payByAccountNumber(req.getDestAcc(), req.getBsbNumber(), req.getAmount(), userID) , BaseEnums.SUCCESS.code());
+    }
+
     //query  transfer  save  withdraw
     //query
     
 
     //transfer
-    @PostMapping("/transferAccount")
-    public Result transferAccount (@RequestParam("accountMoney") double accountMoney ,
-                                   @RequestParam("targetAccount") int targetAccount , HttpServletRequest request){
-        return Results.successWithData(userService.transferAccount(accountMoney , targetAccount , request) , BaseEnums.SUCCESS.code()) ;
+    // @PostMapping("/transferAccount")
+    // public Result transferAccount (@RequestParam("accountMoney") double accountMoney ,
+    //                                @RequestParam("targetAccount") int targetAccount , HttpServletRequest request){
+    //     return Results.successWithData(userService.transferAccount(accountMoney , targetAccount , request) , BaseEnums.SUCCESS.code()) ;
 
-    }
+    // }
 
-    //save
-    @PostMapping("/saveMoney")
-    public Result saveMoney (@RequestParam("accountMoney") Double accountMoney , HttpServletRequest request){
-        return  Results.successWithData(userService.saveMoney(accountMoney , request) , BaseEnums.SUCCESS.code()) ;
-    }
+    // //save
+    // @PostMapping("/saveMoney")
+    // public Result saveMoney (@RequestParam("accountMoney") Double accountMoney , HttpServletRequest request){
+    //     return  Results.successWithData(userService.saveMoney(accountMoney , request) , BaseEnums.SUCCESS.code()) ;
+    // }
 
-    //withdraw
-    @PostMapping("withdrawMoney")
-    public Result withdrawMoney (@RequestParam("accountMoney") Double accountMoney , HttpServletRequest request){
-        return  Results.successWithData(userService.withdrawMoney(accountMoney , request) , BaseEnums.SUCCESS.code()) ;
-    }
+    // //withdraw
+    // @PostMapping("withdrawMoney")
+    // public Result withdrawMoney (@RequestParam("accountMoney") Double accountMoney , HttpServletRequest request){
+    //     return  Results.successWithData(userService.withdrawMoney(accountMoney , request) , BaseEnums.SUCCESS.code()) ;
+    // }
 
 
     @PostMapping("/signup")

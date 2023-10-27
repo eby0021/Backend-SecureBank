@@ -47,19 +47,16 @@ public interface UserService {
 
     public Result loginCheck (String email, String password, HttpServletResponse response) ;
 
-    // public Result login (String email, String password) ;
+    public boolean payByAccountNumber(int destAccNumber, int bsbNumber, double amount) ;
 
+    // //transfer
+    // public String  transferAccount(double accountMoney , int targetAccount , HttpServletRequest request) ;
 
-    //query
+    // //save
+    // public String saveMoney(double accountMoney , HttpServletRequest request) ;
 
-    //transfer
-    public String  transferAccount(double accountMoney , int targetAccount , HttpServletRequest request) ;
-
-    //save
-    public String saveMoney(double accountMoney , HttpServletRequest request) ;
-
-    //withdraw
-    public String withdrawMoney(double accountMoney , HttpServletRequest request) ;
+    // //withdraw
+    // public String withdrawMoney(double accountMoney , HttpServletRequest request) ;
 
     Result signup(User user);
 

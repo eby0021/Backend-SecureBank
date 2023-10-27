@@ -42,7 +42,7 @@ public class TokenUtil {
                 .withAudience(user.getEmail())
                 .withIssuedAt(start)
                 .withIssuedAt(end)
-                .sign(Algorithm.HMAC256(user.getPassword())) ;
+                .sign(Algorithm.HMAC256(user.getuserPassword())) ;
         return token ;
     }
 

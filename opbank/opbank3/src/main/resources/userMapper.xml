@@ -8,41 +8,35 @@
         <result property="middleName" column="middleName"/>
         <result property="dateOfBirth" column="dateOfBirth"/>
         <result property="email" column="email"/>
-        <result property="password" column="password"/>
+        <result property="userPassword" column="userPassword"/>
         <result property="payId" column="payId"/>
         <result property="mobileNumber" column="mobileNumber"/>
-        <result property="token" column="token"/>
-        <result property="accountNumber" column="accountNumber"/>
-        <result property="accountMoney" column="accountMoney"/>
         <!-- Add other fields here -->
     </resultMap>
 
-    <select id="selectByName" resultType="User">
-        select * from sys_user where email = #{email}
-    </select>
-
     <select id="selectById" resultType="User">
-        select * from sys_user where userId = #{userId}
+        SELECT *
+        FROM sys_user
+        WHERE userId = #{userId}
     </select>
 
- <select id="selectByEmail" resultType="User">
-        select * from sys_user where email = #{email}
+    <select id="selectByEmail" resultType="User">
+        SELECT *
+        FROM sys_user
+        WHERE email = #{email}
     </select>
+
     <select id="selectAll" resultType="User">
-        select * from sys_user
+        SELECT *
+        FROM sys_user
     </select>
-  <!-- <select id="loginCheck" resultType="User">
-        select * from sys_user where email = #{email} and password = #{password}
-    </select> -->
-<insert id="insertOne" parameterType="select.system.dto.User">
-        insert into sys_user (firstName, lastName, middleName, dateOfBirth, email, password, payId, mobileNumber, token, accountMoney)
-        values ( #{firstName}, #{lastName}, #{middleName}, #{dateOfBirth}, #{email}, #{password}, #{payId}, #{mobileNumber}, #{token}, #{accountMoney})
+
+    <insert id="insertOne" parameterType="select.system.dto.User">
+        INSERT INTO sys_user (firstName, lastName, middleName, dateOfBirth, email, userPassword, payId, mobileNumber)
+        VALUES (#{firstName}, #{lastName}, #{middleName}, #{dateOfBirth}, #{email}, #{userPassword}, #{payId}, #{mobileNumber})
     </insert>
-
     <!-- Include the other SQL statements as needed -->
-
 </mapper>
-
 
 
 

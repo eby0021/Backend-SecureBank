@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="select.system.dao.CardMapper">
+    <resultMap id="CardMap" type="select.system.dto.Card">
+        <id property="id" column="id" />
+        <result property="number" column="number" />
+        <result property="expirationDate" column="expiration_date" />
+        <result property="isBlocked" column="is_blocked" />
+        <result property="user" column="userID" />
+    </resultMap>
+
+    <select id="selectById" resultType="Card">
+        SELECT *
+        FROM Card
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultType="Card">
+        SELECT *
+        FROM Card
+    </select>
+
+    <insert id="insertOne" parameterType="select.system.dto.Card">
+        INSERT INTO Card (number, expiration_date, is_blocked, userID)
+        VALUES (#{number}, #{expirationDate}, #{isBlocked}, #{user.userId})
+    </insert>
+</mapper>

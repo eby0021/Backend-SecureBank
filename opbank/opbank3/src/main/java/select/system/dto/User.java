@@ -40,8 +40,8 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "userPassword", nullable = false)
+    private String userPassword;
 
     @Column(name = "payId")
     private String payId;
@@ -49,27 +49,10 @@ public class User {
     @Column(name = "mobileNumber")
     private String mobileNumber;
 
-    @Column(name = "token", nullable = true)
+    @Column(name = "token")
     private String token;
 
-    // private Account account;
-
-    // public Account getAccount() {
-    //     return account;
-    // }
-
-    // public void setAccount(Account account) {
-    //     this.account = account;
-    // }
-
-
-    @Column(name = "accountNumber", unique = true)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int accountNumber;
-
-    @Column(name = "accountMoney")
-    private double accountMoney = 0.0; // Default value is set to 0.0
-
+ 
     public int getUserId() {
         return userId;
     }
@@ -118,12 +101,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getuserPassword() {
+        return userPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setuserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public String getPayId() {
@@ -148,24 +131,5 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-
-    public int getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(int accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    
-    // Getter and setter methods for the new attribute
-    public double getAccountMoney() {
-        return accountMoney;
-    }
-
-    public void setAccountMoney(double accountMoney) {
-        this.accountMoney = accountMoney;
     }
 }
