@@ -29,7 +29,7 @@ public interface UserService {
 
     public List<User> selectAll() ;
 
-    public boolean insertOne(User user) ;
+    public void insertOne(User user, HttpServletResponse response) ;
 
     public boolean insertMany(List<User> userList) ;
 
@@ -45,7 +45,7 @@ public interface UserService {
 
     public List<User> selectByLike(Map<String , Object> map) ;
 
-    public Result loginCheck (String email, String password, HttpServletResponse response) ;
+    public int loginCheck (String email, String password, HttpServletResponse response) ;
 
     public boolean payByAccountNumber(int destAccNumber, int bsbNumber, double amount, int userID) ;
 

@@ -71,19 +71,29 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectAll() ;
     }
 
-    public boolean insertOne(User user) {
-      //  System.out.println("hello I am in UserServiceImpl class s function insertOne");
-        boolean result = userMapper.insertOne(user) ;
-        if(result==true){
+    public void insertOne(User user, HttpServletResponse response) {
+        try {
+            // Attempt to insert the user
+            userMapper.insertOne(user);
+            
+            // After inserting the user, you can retrieve the user ID and perform additional actions.
             User resultObj = userMapper.selectByEmail(user.getEmail());
             int idOfUser = resultObj.getUserId();
-            System.out.println("UserID is: "+idOfUser);
-           accountMapper.insertOne(idOfUser);
-            // int cardNumber = generateUniqueRandomNumber();
-            // cardMapper.insertOne( cardNumber);
+            System.out.println("UserID is: " + idOfUser);
+    
+            // Insert other related data (e.g., account) using the retrieved user ID
+            accountMapper.insertOne(idOfUser);
+            
+            // If everything was successful, set the response status to OK (200).
+            response.setStatus(HttpServletResponse.SC_OK);
+        } catch (Exception e) {
+            // Handle exceptions here
+            e.printStackTrace();
+            System.out.println("An error occurred: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
-        return result;
     }
+    
 
     public boolean insertMany(List<User> userList) {
         return userMapper.insertMany(userList) ;
@@ -112,15 +122,33 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectByLike(map) ;
     }
 
-    public Result loginCheck(String email, String password, HttpServletResponse response){
-        System.out.println("I am in loginCheck of UserServiceImpl");
+    public int loginCheck(String email, String password, HttpServletResponse response){
+       // System.out.println("I am in loginCheck of UserServiceImpl");
         User user1 = userMapper.selectByEmail(email) ;
-        System.out.println("user1 is:"+user1.getEmail());
+       // System.out.println("user1 is:"+user1.getEmail());
         if(user1 == null ){
-            return Results.failure("User does not exist") ;
-        }else if(!user1.getuserPassword().equals(password)){
-            return Results.failure("Password incorrect") ;
+            System.out.println("user not found");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return 0 ;
+        } 
+        // else{
+        //    System.out.println("user password is:"+user1.getuserPassword());
+        //    System.out.println("password is:"+password);
+        //    System.out.println("equals is: "+user1.getuserPassword().equals(password));
+        // }
+        //             return Results.successWithData(user1);
+    
+        else if(!user1.getuserPassword().equals(password)){
+            System.out.println("incorrect password");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return 0 ;
         }
+        else{
+            System.out.println("login successful");
+            response.setStatus(HttpServletResponse.SC_OK);
+            return user1.getUserId();
+        }
+    }
         // Jedis jedis = jedisUtil.getSource() ;
         // String jedisKey = jedis.get(email) ;
         // if(jedisKey != null){
@@ -132,12 +160,8 @@ public class UserServiceImpl implements UserService {
         // // Set the token in the response header
         // response.setHeader("Authorization", token);
         // jedisUtil.tokenToJedis(user1);
-        else{
-            System.out.println("successful");
-            return Results.successWithData(user1);
-
-        }
-    }
+       
+    
 
 
     public boolean payByAccountNumber(int destAcc, int bsbNumber, double amount, int userID){

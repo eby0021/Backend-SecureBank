@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
  * Project: OP-Bank
@@ -32,6 +33,7 @@ import java.util.Map;
  * Why & What is modified: None
  * Version: 0.1.0
  */
+@CrossOrigin(origins = "http://localhost:3000") // Replace with the URL of your frontend
 @RestController
 @RequestMapping("/sys/user")
 public class UserController {
@@ -115,16 +117,20 @@ public class UserController {
     // }
 
     @PostMapping("/loginCheck")
-    public Result loginCheck(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        System.out.println("I am in userController");
-        return Results.successWithData(userService.loginCheck(loginRequest.getEmail(), loginRequest.getPassword(), response), 
-            BaseEnums.SUCCESS.code());
+    public int loginCheck(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        //System.out.println("I am in userController");
+        System.out.println("getEmail:"+loginRequest.getEmail());
+        System.out.println("getPassword:"+loginRequest.getPassword());
+        return userService.loginCheck(loginRequest.getEmail(), loginRequest.getPassword(), response);
     }
     
     
 @PostMapping("/insertOne")
-    public Result insertOne(@RequestBody User user){
-        return Results.successWithData(userService.insertOne(user) , BaseEnums.SUCCESS.code()) ;
+    public void insertOne(@RequestBody User user, HttpServletResponse response){
+        System.out.println("user email: "+user.getEmail());
+        System.out.println("user fname: "+user.getFirstName());
+        System.out.println("user pwd: "+user.getuserPassword());
+         userService.insertOne(user, response);
 
     }
     @PostMapping("/payByAccountNumber")
