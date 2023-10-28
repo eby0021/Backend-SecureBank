@@ -1,5 +1,5 @@
 package select.system.dto;
-public class payByAccountNumberReq {
+public class PayByAccountNumberReq {
     private int destAcc;
     private int bsbNumber;
     private double amount;

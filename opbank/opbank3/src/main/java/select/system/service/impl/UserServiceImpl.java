@@ -1,5 +1,5 @@
 package select.system.service.impl;
-
+import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -10,14 +10,16 @@ import select.constants.BaseEnums;
 import select.constants.TransactionType;
 import select.system.dao.UserMapper;
 import select.system.dao.AccountMapper;
+import select.system.dao.CardMapper;
+import select.system.dao.BillMapper;
 import select.system.dto.User;
 import select.system.dto.Account;
+import select.system.dto.Bill;
 import select.system.service.UserService;
 import select.util.JedisUtil;
 import select.util.PageBean;
 import select.util.Results;
 import select.util.TokenUtil;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -46,10 +48,16 @@ public class UserServiceImpl implements UserService {
     AccountMapper accountMapper ;
 
     @Autowired
+    CardMapper cardMapper ;
+
+    @Autowired
     TokenUtil tokenUtil ;
 
     @Autowired
     JedisUtil jedisUtil ;
+
+    @Autowired
+    BillMapper billMapper ;
 
     // public User selectByEmail(String email) {
     //   return  userMapper.selectByEmail(email) ;
@@ -68,12 +76,12 @@ public class UserServiceImpl implements UserService {
         boolean result = userMapper.insertOne(user) ;
         if(result==true){
             User resultObj = userMapper.selectByEmail(user.getEmail());
-            System.out.println("UserID is: "+resultObj.getUserId());
-            accountMapper.insertOne(resultObj.getUserId());
+            int idOfUser = resultObj.getUserId();
+            System.out.println("UserID is: "+idOfUser);
+           accountMapper.insertOne(idOfUser);
+            // int cardNumber = generateUniqueRandomNumber();
+            // cardMapper.insertOne( cardNumber);
         }
-      
-
-
         return result;
     }
 
@@ -107,6 +115,7 @@ public class UserServiceImpl implements UserService {
     public Result loginCheck(String email, String password, HttpServletResponse response){
         System.out.println("I am in loginCheck of UserServiceImpl");
         User user1 = userMapper.selectByEmail(email) ;
+        System.out.println("user1 is:"+user1.getEmail());
         if(user1 == null ){
             return Results.failure("User does not exist") ;
         }else if(!user1.getuserPassword().equals(password)){
@@ -123,20 +132,31 @@ public class UserServiceImpl implements UserService {
         // // Set the token in the response header
         // response.setHeader("Authorization", token);
         // jedisUtil.tokenToJedis(user1);
-        return Results.successWithData(user1);
+        else{
+            System.out.println("successful");
+            return Results.successWithData(user1);
+
+        }
     }
 
 
-    public boolean payByAccountNumber(int destAcc, int bsbsNumber, double amount, int userID){
+    public boolean payByAccountNumber(int destAcc, int bsbNumber, double amount, int userID){
         Account destAccountObj = accountMapper.selectByAccountNumber(destAcc);
+        System.out.println("dest acc Number is:"+destAccountObj.getAccountNumber());
         double currAmount = destAccountObj.getAmount();
-        if(bsbsNumber == destAccountObj.getBsbNumber()){
+        if(bsbNumber == destAccountObj.getBsbNumber()){
+            System.out.println("bsb number entered is correct");
             Account senderAccount = accountMapper.selectByUserID(userID);
             if(senderAccount != null){
+                System.out.println("sender acc is not null. Account:"+senderAccount);
                 double senderAmount = senderAccount.getAmount();
                 if(senderAmount >= amount){
-                    senderAccount.setAmount(senderAmount - amount);
-                    destAccountObj.setAmount(currAmount + amount);
+                    // senderAccount.setAmount(senderAmount - amount);
+                    // destAccountObj.setAmount(currAmount + amount);
+                    // System.out.println("sender amount:"+senderAccount.getAmount());
+                    // System.out.println("receiver amount:"+destAccountObj.getAmount());
+                    accountMapper.saveMoney(destAccountObj.getAccountNumber(), amount);
+                    accountMapper.withdrawMoney(senderAccount.getAccountNumber(), amount);
                     return true;
                 } else{
                     System.out.println("Insufficient funds");
@@ -152,6 +172,43 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+
+    public boolean payBill(int referenceNumber, int billerCode, double amount, String nickname, int userID) {
+        Account billerAccount = accountMapper.selectByUserID(billerCode);
+    
+        if (billerAccount != null) {
+            System.out.println("Biller account found. Account: " + billerAccount.getAccountNumber());
+            double billerAmount = billerAccount.getAmount();
+            
+            Account senderAccount = accountMapper.selectByUserID(userID);
+            
+            if (senderAccount != null) {
+                System.out.println("Sender account is not null. Account: " + senderAccount.getAccountNumber());
+                double senderAmount = senderAccount.getAmount();
+    
+                if (senderAmount >= amount) {
+                    System.out.println("Sufficient funds in sender's account");
+                    
+                    // Perform the money transfer
+                    accountMapper.withdrawMoney(senderAccount.getAccountNumber(), amount);
+                    boolean isPaid = true;
+                    return  billMapper.insertOne(billerCode, referenceNumber, amount, nickname, isPaid);
+                   
+                } else {
+                    System.out.println("Insufficient funds in sender's account");
+                    return false;
+                }
+            } else {
+                System.out.println("Sender's userID does not match with any account");
+                return false;
+            }
+        } else {
+            System.out.println("Biller account not found");
+            return false;
+        }
+    }
+    
+
 
 
 
@@ -265,5 +322,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
+    public int generateUniqueRandomNumber() {
+       // int currentTime = System.currentTimeMillis();
+        Random random = new Random();
+        // Generate a random number of up to 4 digits
+        int randomValue = random.nextInt(10000);
+    
+        // Combine the current time and random number to create a 16-digit unique number
+       // int uniqueNumber = (currentTime * 1000000L) + randomValue;
+    
+        return randomValue;
+    }
+    
 }

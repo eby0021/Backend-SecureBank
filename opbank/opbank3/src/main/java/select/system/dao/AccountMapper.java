@@ -18,4 +18,10 @@ public interface AccountMapper {
     public List<Account> selectAll();
 
     public boolean insertOne(int userID);
+
+    public boolean saveMoney(int accountNumber, double amountToAdd);
+
+    public boolean withdrawMoney(int accountNumber, double amountToAdd);
+
+
 }

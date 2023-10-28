@@ -14,7 +14,7 @@ public interface CardMapper {
 
     public List<Card> selectAll();
 
-    public boolean insertOne(Card card);
+    public boolean insertOne(int number);
 
     // Define other methods for working with Card as needed
 }

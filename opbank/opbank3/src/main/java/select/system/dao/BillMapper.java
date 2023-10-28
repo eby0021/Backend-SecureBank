@@ -14,7 +14,7 @@ public interface BillMapper {
 
     public List<Bill> selectAll();
 
-    public boolean insertOne(Bill bill);
+    public boolean insertOne(int billerCode, int referenceNumber, double amount, String nickname, boolean isPaid);
 
     // Define other methods for working with Bill as needed
 }

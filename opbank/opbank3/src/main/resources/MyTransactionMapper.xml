@@ -6,15 +6,16 @@
         <result property="reason" column="reason"/>
         <result property="amount" column="amount"/>
         <result property="transDate" column="transDate"/>
-        <!-- Add other fields here -->
 
         <!-- Define associations with senderAccount and receiverAccount -->
-        <association property="senderAccount" column="sender_accountNumber">
-            <resultMap property="senderAccount" type="select.system.dto.Account"/>
+        <association property="senderAccount">
+            <result property="accountNumber" column="sender_accountNumber" javaType="int"/>
+            <!-- Define other properties for the senderAccount object -->
         </association>
 
-        <association property="receiverAccount" column="receiver_accountNumber">
-            <resultMap property="receiverAccount" type="select.system.dto.Account"/>
+        <association property="receiverAccount">
+            <result property="accountNumber" column="receiver_accountNumber" javaType="int"/>
+            <!-- Define other properties for the receiverAccount object -->
         </association>
     </resultMap>
 

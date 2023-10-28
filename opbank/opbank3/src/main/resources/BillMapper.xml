@@ -6,6 +6,7 @@
         <result property="billerCode" column="billerCode" />
         <result property="amount" column="amount" />
         <result property="nickname" column="nickname" />
+          <result property="isPaid" column="isPaid" />
     </resultMap>
 
     <select id="selectByReferenceNumber" resultType="Bill">
@@ -20,7 +21,7 @@
     </select>
 
     <insert id="insertOne" parameterType="select.system.dto.Bill">
-        INSERT INTO Bill (billerCode, amount, nickname)
-        VALUES (#{billerCode}, #{amount}, #{nickname})
+        INSERT INTO Bill (billerCode, referenceNumber, amount, nickname, isPaid)
+        VALUES (#{billerCode}, #{referenceNumber}, #{amount}, #{nickname}, #{isPaid})
     </insert>
 </mapper>

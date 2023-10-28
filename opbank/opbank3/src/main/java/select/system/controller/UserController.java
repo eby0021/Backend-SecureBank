@@ -8,6 +8,7 @@ import select.constants.BaseEnums;
 import select.system.dto.User;
 import select.system.dto.PayByAccountNumberReq;
 import select.system.dto.LoginRequest;
+import select.system.dto.PayBillReq;
 import select.system.service.UserService;
 import select.util.PageBean;
 import select.util.Results;
@@ -127,8 +128,13 @@ public class UserController {
 
     }
     @PostMapping("/payByAccountNumber")
-    public Result payByAccountNumber(@RequestBpdy PayByAccountNumberReq req, @RequestParam("userID") int userID,  HttpServletResponse response){
+    public Result payByAccountNumber(@RequestBody PayByAccountNumberReq req, @RequestParam("userID") int userID,  HttpServletResponse response){
         return Results.successWithData(userService.payByAccountNumber(req.getDestAcc(), req.getBsbNumber(), req.getAmount(), userID) , BaseEnums.SUCCESS.code());
+    }
+
+    @PostMapping("/payBill")
+    public Result payBill(@RequestBody PayBillReq req, @RequestParam("userID") int userID,  HttpServletResponse response){
+        return Results.successWithData(userService.payBill(req.getReferenceNumber(), req.getBillerCode(), req.getAmount(), req.getNickname(), userID) , BaseEnums.SUCCESS.code());
     }
 
     //query  transfer  save  withdraw

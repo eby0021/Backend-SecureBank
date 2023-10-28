@@ -13,7 +13,7 @@ public class MyTransaction implements Serializable {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "sender_accountNumber")
     private Account senderAccount;
 

@@ -30,5 +30,16 @@
         VALUES (#{userID})
     </insert>
 
+<update id="saveMoney" parameterType="map">
+    UPDATE Account
+    SET amount = amount + #{amountToAdd}
+    WHERE accountNumber = #{accountNumber}
+</update>
+
+<update id="withdrawMoney" parameterType="map">
+    UPDATE Account
+    SET amount = amount - #{amountToAdd}
+    WHERE accountNumber = #{accountNumber}
+</update>
     <!-- Include the other SQL statements as needed -->
 </mapper>
