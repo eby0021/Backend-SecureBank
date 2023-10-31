@@ -44,7 +44,7 @@ public class User {
     private String userPassword;
 
     @Column(name = "payId")
-    private String payId;
+    private int payId;
 
     @Column(name = "mobileNumber")
     private String mobileNumber;
@@ -109,11 +109,11 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    public String getPayId() {
+    public int getPayId() {
         return payId;
     }
 
-    public void setPayId(String payId) {
+    public void setPayId(int payId) {
         this.payId = payId;
     }
 

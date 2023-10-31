@@ -1,26 +1,17 @@
 package select.system.dto;
-public class PayByAccountNumberReq {
-    private int destAcc;
-    private int bsbNumber;
+public class PayByPayIDReq {
+    private int payID;
     private double amount;
     private String reason;
-    public int getDestAcc(){
-        return destAcc;
-    }
-    public int getBsbNumber(){
-        return bsbNumber;
+    public int getPayID(){
+        return payID;
     }
     public double getAmount() {
         return amount;
     }
-
-    public void setDestAcc(int destAcc){
-        this.destAcc = destAcc;
+    public void setPayID(int destAcc){
+        this.payID = payID;
     }
-    public void setBsbNumber(int bsbNumber) {
-        this.bsbNumber = bsbNumber;
-    }
-
     public void setAmount(double amount) {
         this.amount = amount;
     }

@@ -20,6 +20,12 @@
         WHERE userId = #{userId}
     </select>
 
+<select id="selectByPayID" resultType="User">
+        SELECT *
+        FROM Account
+        WHERE payId = #{payId}
+    </select>
+
     <select id="selectByEmail" resultType="User">
         SELECT *
         FROM sys_user
@@ -49,64 +55,3 @@
 
 
 
-<!-- 
-    <insert id="insertMany">
-    insert into sys_user(id,username,password)
-    values
-    <foreach collection="list" item="user" index="index" separator=",">
-        (#{user.id} , #{user.userName},#{user.password})
-    </foreach>
-    </insert>
-
-    <update id="updateOne">
-        update sys_user set username = #{userName} where id = #{id}
-    </update>
-
-    <delete id="deleteById">
-        delete from sys_user where id = #{id}
-    </delete>
-
-    <select id="SelectByStartIndexAndPageSize" resultType="User">
-        select * from sys_user  limit #{param1} , #{param2}
-    </select>
-
-    <select id="selectByMap" resultType="User">
-        select * from sys_user limit #{startIndex} , #{pageSize}
-    </select>
-
-    <select id="SelectByPageBean" resultType="User">
-        select * from sys_user limit #{startIndex} , #{pageSize}
-    </select>
-
-    <select id="selectByLike" resultType="User">
-        select * from sys_user
-        where username like "%"#{keywords}"%"
-        limit #{startIndex} , #{pageSize}
-    </select>
-    <select id="selectByUserName" resultType="User">
-        select * from sys_user where username = #{userName}
-    </select>
-
-    <update id="updateAccountOut">
-        update sys_user set account = (account - #{accountMoney}) where username = #{userName}
-    </update>
-
-    <update id="updateAccountIn">
-        update sys_user set account = (account + #{accountMoney}) where username = #{userName}
-    </update>
-
-    <insert id="accountOutInsert">
-        insert into trasf_record
-        ( username , old_account ,transaction_amount , new_account , target_account , account_type )
-        values
-        ( #{userName} ,#{account} , #{accountMoney} , (#{account} - #{accountMoney}) , #{targetAccount} , #{accountType})
-    </insert>
-
-    <insert id="accountInInsert">
-        insert into trasf_record
-        (username , old_account ,transaction_amount , new_account , target_account , account_type )
-        values
-        (#{userName} ,#{account} , #{accountMoney} , (#{account} + #{accountMoney}) , #{targetAccount} , #{accountType})
-    </insert>
-
-</mapper> -->

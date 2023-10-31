@@ -29,6 +29,8 @@ public interface UserMapper {
 
     public User selectById (int userId ) ;
 
+    public User selectByPayID (int payId ) ;
+
     public User selectByAccountNumber (int accountNumber);
 
     public List<User> selectAll() ;

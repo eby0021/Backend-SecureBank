@@ -7,6 +7,7 @@ import select.base.Result;
 import select.constants.BaseEnums;
 import select.system.dto.User;
 import select.system.dto.PayByAccountNumberReq;
+import select.system.dto.PayByPayIDReq;
 import select.system.dto.LoginRequest;
 import select.system.dto.PayBillReq;
 import select.system.service.UserService;
@@ -110,12 +111,6 @@ public class UserController {
     }
 
 
-
-    // @GetMapping("/login")
-    // public Result login(@RequestParam("email") String email, @RequestParam("password") String password){
-    //     return Results.successWithData(userService.login(String email, String password) , BaseEnums.SUCCESS.code()) ;
-    // }
-
     @PostMapping("/loginCheck")
     public int loginCheck(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         //System.out.println("I am in userController");
@@ -134,13 +129,23 @@ public class UserController {
 
     }
     @PostMapping("/payByAccountNumber")
-    public Result payByAccountNumber(@RequestBody PayByAccountNumberReq req, @RequestParam("userID") int userID,  HttpServletResponse response){
-        return Results.successWithData(userService.payByAccountNumber(req.getDestAcc(), req.getBsbNumber(), req.getAmount(), userID) , BaseEnums.SUCCESS.code());
+    public boolean payByAccountNumber(@RequestBody PayByAccountNumberReq req, @RequestParam("userID") 
+    int userID, HttpServletResponse response){
+        return userService.payByAccountNumber(req.getDestAcc(), req.getBsbNumber(), req.getAmount(),
+         req.getReason(), userID, response);
+    }
+
+
+    @PostMapping("/payByPayID")
+    public boolean payByPayID(@RequestBody PayByPayIDReq req, @RequestParam("userID") int userID,  HttpServletResponse response){
+        return userService.payByPayID(req.getPayID(), req.getAmount(), req.getReason(), userID, response);
     }
 
     @PostMapping("/payBill")
-    public Result payBill(@RequestBody PayBillReq req, @RequestParam("userID") int userID,  HttpServletResponse response){
-        return Results.successWithData(userService.payBill(req.getReferenceNumber(), req.getBillerCode(), req.getAmount(), req.getNickname(), userID) , BaseEnums.SUCCESS.code());
+    public boolean payBill(@RequestBody PayBillReq req, @RequestParam("userID") int userID,
+      HttpServletResponse response){
+        return userService.payBill(req.getReferenceNumber(), req.getBillerCode(),
+         req.getAmount(), req.getNickname(), userID, response);
     }
 
     //query  transfer  save  withdraw

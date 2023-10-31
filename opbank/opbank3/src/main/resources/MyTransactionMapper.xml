@@ -3,27 +3,37 @@
 <mapper namespace="select.system.dao.MyTransactionMapper">
     <resultMap id="MyTransactionMap" type="select.system.dto.MyTransaction">
         <id property="id" column="id"/>
+        <result property="sender_accountNumber" column="sender_accountNumber"/>
+        <result property="receiver_accountNumber" column="receiver_accountNumber"/>
         <result property="reason" column="reason"/>
         <result property="amount" column="amount"/>
         <result property="transDate" column="transDate"/>
-
-        <!-- Define associations with senderAccount and receiverAccount -->
-        <association property="senderAccount">
-            <result property="accountNumber" column="sender_accountNumber" javaType="int"/>
-            <!-- Define other properties for the senderAccount object -->
-        </association>
-
-        <association property="receiverAccount">
-            <result property="accountNumber" column="receiver_accountNumber" javaType="int"/>
-            <!-- Define other properties for the receiverAccount object -->
-        </association>
+        <result property="referenceNumber" column="referenceNumber"/>
     </resultMap>
 
-    <select id="selectById" resultType="MyTransaction">
+    <select id="selectById" resultMap="MyTransactionMap">
         SELECT *
         FROM MyTransaction
         WHERE id = #{id}
     </select>
+
+    <select id="selectByAccountNumber" resultMap="MyTransactionMap">
+        SELECT *
+        FROM MyTransaction
+        WHERE receiver_accountNumber = #{accountNumber}
+        OR
+        sender_accountNumber = #{accountNumber}
+    </select>
+
+    <insert id="insertOne" parameterType="select.system.dto.MyTransaction">
+        INSERT INTO MyTransaction (sender_accountNumber, receiver_accountNumber, reason, amount, transDate, referenceNumber)
+        VALUES (#{sender_accountNumber}, #{receiver_accountNumber}, #{reason}, #{amount}, #{transDate}, #{referenceNumber})
+    </insert>
+
+    <insert id="insertOneBill" parameterType="select.system.dto.MyTransaction">
+        INSERT INTO MyTransaction (sender_accountNumber, amount, transDate, referenceNumber)
+        VALUES (#{sender_accountNumber},  #{amount}, #{transDate}, #{referenceNumber})
+    </insert>
 
     <!-- Define other SQL statements for MyTransaction as needed -->
 </mapper>

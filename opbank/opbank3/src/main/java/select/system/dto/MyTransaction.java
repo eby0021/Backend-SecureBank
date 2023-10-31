@@ -13,23 +13,24 @@ public class MyTransaction implements Serializable {
     @Column(name = "id")
     private int id;
 
-    @OneToOne
-    @JoinColumn(name = "sender_accountNumber")
-    private Account senderAccount;
+    @Column(name = "sender_accountNumber")
+    private int sender_accountNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "receiver_accountNumber")
-    private Account receiverAccount;
+    
+    @Column(name = "receiver_accountNumber")
+    private int receiver_accountNumber;
 
     @Column(name = "reason", length = 100)
     private String reason;
 
     @Column(name = "amount", precision = 10, scale = 3)
-    private BigDecimal amount;
+    private double amount;
 
     @Column(name = "transDate")
     private Date transDate;
 
+    @Column(name ="referenceNumber")
+    private int referenceNumber;
     public int getId() {
         return id;
     }
@@ -38,20 +39,28 @@ public class MyTransaction implements Serializable {
         this.id = id;
     }
 
-    public Account getSenderAccount() {
-        return senderAccount;
+    public int getReferenceNumber() {
+        return referenceNumber;
     }
 
-    public void setSenderAccount(Account senderAccount) {
-        this.senderAccount = senderAccount;
+    public void setReferenceNumber(int referenceNumber){
+        this.referenceNumber = referenceNumber;
     }
 
-    public Account getReceiverAccount() {
-        return receiverAccount;
+    public int getSenderAccountNumber() {
+        return sender_accountNumber;
     }
 
-    public void setReceiverAccount(Account receiverAccount) {
-        this.receiverAccount = receiverAccount;
+    public void setSenderAccountNumber(int sender_accountNumber) {
+        this.sender_accountNumber = sender_accountNumber;
+    }
+
+    public int getReceiverAccountNumber() {
+        return receiver_accountNumber;
+    }
+
+    public void setReceiverAccountNumber(int receiver_accountNumber) {
+        this.receiver_accountNumber = receiver_accountNumber;
     }
 
     public String getReason() {
@@ -62,11 +71,11 @@ public class MyTransaction implements Serializable {
         this.reason = reason;
     }
 
-    public BigDecimal getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -77,4 +86,30 @@ public class MyTransaction implements Serializable {
     public void setTransDate(Date transDate) {
         this.transDate = transDate;
     }
+
+     public MyTransaction(int senderAccount, int receiverAccount, String reason, double amount) {
+        this.sender_accountNumber = senderAccount;
+        this.receiver_accountNumber = receiverAccount;
+        this.reason = reason;
+        this.amount = amount;
+        this.transDate = new Date(); // Set the transDate to the current date and time
+    }
+
+     public MyTransaction(int senderAccount, int referenceNumber, double amount) {
+        this.referenceNumber = referenceNumber;
+        this.amount = amount;
+        this.sender_accountNumber = senderAccount;
+        this.transDate = new Date(); // Set the transDate to the current date and time
+    }
+
+    public MyTransaction(int id, int sender_accountNumber, int receiver_accountNumber, int referenceNumber, String reason, double amount, Date transDate) {
+        this.id = id;
+        this.sender_accountNumber = sender_accountNumber;
+        this.receiver_accountNumber = receiver_accountNumber;
+        this.referenceNumber = referenceNumber;
+        this.reason = reason;
+        this.amount = amount;
+        this.transDate = transDate;
+    }
+    
 }

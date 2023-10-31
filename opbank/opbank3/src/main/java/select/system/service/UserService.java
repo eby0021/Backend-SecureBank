@@ -47,9 +47,13 @@ public interface UserService {
 
     public int loginCheck (String email, String password, HttpServletResponse response) ;
 
-    public boolean payByAccountNumber(int destAccNumber, int bsbNumber, double amount, int userID) ;
+    public boolean payByAccountNumber(int destAccNumber, int bsbNumber, double amount, String reason,
+     int userID, HttpServletResponse response) ;
 
-    public boolean payBill(int referenceNumber, int billerCode, double amount, String nickname, int userID) ;
+    public boolean payByPayID(int payID, double amount, String reason, int userID, HttpServletResponse response) ;
+
+    public boolean payBill(int referenceNumber, int billerCode, double amount, String nickname, 
+    int userID, HttpServletResponse response) ;
 
 
     // //transfer

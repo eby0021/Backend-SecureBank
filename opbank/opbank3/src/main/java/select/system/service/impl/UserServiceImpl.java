@@ -12,9 +12,11 @@ import select.system.dao.UserMapper;
 import select.system.dao.AccountMapper;
 import select.system.dao.CardMapper;
 import select.system.dao.BillMapper;
+import select.system.dao.MyTransactionMapper;
 import select.system.dto.User;
 import select.system.dto.Account;
 import select.system.dto.Bill;
+import select.system.dto.MyTransaction;
 import select.system.service.UserService;
 import select.util.JedisUtil;
 import select.util.PageBean;
@@ -49,6 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     CardMapper cardMapper ;
+
+    @Autowired
+    MyTransactionMapper myTransactionMapper ;
 
     @Autowired
     TokenUtil tokenUtil ;
@@ -164,10 +169,15 @@ public class UserServiceImpl implements UserService {
     
 
 
-    public boolean payByAccountNumber(int destAcc, int bsbNumber, double amount, int userID){
+    public boolean payByAccountNumber(int destAcc, int bsbNumber, double amount, String reason,
+     int userID, HttpServletResponse response){
+        System.out.println("===========================destAcc is"+destAcc);
+        System.out.println("===========================bsbNumber is"+bsbNumber);
+                System.out.println("===========================userID is"+userID);
+
         Account destAccountObj = accountMapper.selectByAccountNumber(destAcc);
-        System.out.println("dest acc Number is:"+destAccountObj.getAccountNumber());
-        double currAmount = destAccountObj.getAmount();
+        //System.out.println("dest acc Number is:"+destAccountObj.getAccountNumber());
+      //  double currAmount = destAccountObj.getAmount();
         if(bsbNumber == destAccountObj.getBsbNumber()){
             System.out.println("bsb number entered is correct");
             Account senderAccount = accountMapper.selectByUserID(userID);
@@ -181,13 +191,23 @@ public class UserServiceImpl implements UserService {
                     // System.out.println("receiver amount:"+destAccountObj.getAmount());
                     accountMapper.saveMoney(destAccountObj.getAccountNumber(), amount);
                     accountMapper.withdrawMoney(senderAccount.getAccountNumber(), amount);
+                    int senderAccountNumber = senderAccount.getAccountNumber();
+                    int receiverAccountNumber = destAccountObj.getAccountNumber();
+                   // System.out.println("reason is: "+reason);
+                    MyTransaction mt = new MyTransaction(senderAccountNumber, receiverAccountNumber,
+                     reason, amount);
+                    boolean trans = myTransactionMapper.insertOne(mt);
+                    if(trans) System.out.println("transaction saved successfully");
+                    response.setStatus(HttpServletResponse.SC_OK);
                     return true;
                 } else{
                     System.out.println("Insufficient funds");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     return false;
                 }
             } else{
                 System.out.println("sender's userID does not match with any account");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return false;
             }
          
@@ -196,13 +216,53 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+    public boolean payByPayID(int payID, double amount, String reason, int userID,
+     HttpServletResponse response){
+        User destUserObj = userMapper.selectByPayID(payID);
+        int destUserID = destUserObj.getUserId();
+        Account destAccountObj = accountMapper.selectByUserID(destUserID);
+        System.out.println("dest acc Number is:"+destAccountObj.getAccountNumber());
+        //double currAmount = destAccountObj.getAmount();
+            Account senderAccount = accountMapper.selectByUserID(userID);
+            if(senderAccount != null){
+                System.out.println("sender acc is not null. Account:"+senderAccount);
+                double senderAmount = senderAccount.getAmount();
+                if(senderAmount >= amount){
+                    // senderAccount.setAmount(senderAmount - amount);
+                    // destAccountObj.setAmount(currAmount + amount);
+                    // System.out.println("sender amount:"+senderAccount.getAmount());
+                    // System.out.println("receiver amount:"+destAccountObj.getAmount());
+                    accountMapper.saveMoney(destAccountObj.getAccountNumber(), amount);
+                    accountMapper.withdrawMoney(senderAccount.getAccountNumber(), amount);
+                    int senderAccountNumber = senderAccount.getAccountNumber();
+                    int receiverAccountNumber = destAccountObj.getAccountNumber();
+                   //System.out.println("reason is: "+reason);
+                    MyTransaction mt = new MyTransaction(senderAccountNumber, receiverAccountNumber,
+                     reason, amount);
+                    boolean trans = myTransactionMapper.insertOne(mt);
+                    if(trans) System.out.println("transaction saved successfully");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    return true;
+                } else{
+                    System.out.println("Insufficient funds");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    return false;
+                }
+            } else{
+                System.out.println("sender's userID does not match with any account");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return false;
+            }
+    }
 
-    public boolean payBill(int referenceNumber, int billerCode, double amount, String nickname, int userID) {
+
+    public boolean payBill(int referenceNumber, int billerCode, double amount, String nickname, int userID,
+    HttpServletResponse response) {
         Account billerAccount = accountMapper.selectByUserID(billerCode);
     
         if (billerAccount != null) {
             System.out.println("Biller account found. Account: " + billerAccount.getAccountNumber());
-            double billerAmount = billerAccount.getAmount();
+            //double billerAmount = billerAccount.getAmount();
             
             Account senderAccount = accountMapper.selectByUserID(userID);
             
@@ -216,26 +276,34 @@ public class UserServiceImpl implements UserService {
                     // Perform the money transfer
                     accountMapper.withdrawMoney(senderAccount.getAccountNumber(), amount);
                     boolean isPaid = true;
+                    int sender_accountNumber = senderAccount.getAccountNumber();
+                    MyTransaction mt = new MyTransaction(sender_accountNumber, referenceNumber, amount);
+                    boolean trans = myTransactionMapper.insertOneBill(mt);
+                    if(trans) System.out.println("transaction saved successfully");
+                    // List<MyTransaction> transactions = myTransactionMapper.selectByAccountNumber(sender_accountNumber);
+                    // for(int i=0; i<transactions.size(); i++){
+                    //     System.out.println(transactions.get(i));
+                    // }
+                    response.setStatus(HttpServletResponse.SC_OK);
                     return  billMapper.insertOne(billerCode, referenceNumber, amount, nickname, isPaid);
                    
                 } else {
                     System.out.println("Insufficient funds in sender's account");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     return false;
                 }
             } else {
                 System.out.println("Sender's userID does not match with any account");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return false;
             }
         } else {
             System.out.println("Biller account not found");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return false;
         }
     }
     
-
-
-
-
     //query
     public User selectByEmail(String email) {
         return userMapper.selectByEmail(email) ;
