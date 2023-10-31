@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
  * Project: OP-Bank
@@ -146,6 +145,11 @@ public class UserController {
       HttpServletResponse response){
         return userService.payBill(req.getReferenceNumber(), req.getBillerCode(),
          req.getAmount(), req.getNickname(), userID, response);
+    }
+
+     @GetMapping("/getAccountMoney")
+    public double getAccountMoney( @RequestParam("userID") int userID, HttpServletResponse response){
+        return userService.getAccountMoneyFunction(userID, response);
     }
 
     //query  transfer  save  withdraw

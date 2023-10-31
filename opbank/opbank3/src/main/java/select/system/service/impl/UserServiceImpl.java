@@ -309,6 +309,14 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectByEmail(email) ;
     }
 
+    public double getAccountMoneyFunction(int userID, HttpServletResponse response){
+        Account account = accountMapper.selectByUserID(userID);
+        double money = account.getAmount();
+        response.setStatus(HttpServletResponse.SC_OK);
+        return money;
+    }
+
+
     //transfer
     // public String transferAccount(double accountMoney , int targetAccount , HttpServletRequest request){
     //     Jedis jedis = jedisUtil.getSource() ;

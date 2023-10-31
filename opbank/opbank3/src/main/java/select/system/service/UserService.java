@@ -56,6 +56,8 @@ public interface UserService {
     int userID, HttpServletResponse response) ;
 
 
+     public double getAccountMoneyFunction(int userID, HttpServletResponse response);
+
     // //transfer
     // public String  transferAccount(double accountMoney , int targetAccount , HttpServletRequest request) ;
 
