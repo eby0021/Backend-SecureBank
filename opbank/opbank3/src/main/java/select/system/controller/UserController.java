@@ -1,24 +1,31 @@
 package select.system.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+// import com.rivescript.RiveScript;
 import select.base.Result;
 import select.constants.BaseEnums;
 import select.system.dto.User;
 import select.system.dto.PayByAccountNumberReq;
 import select.system.dto.PayByPayIDReq;
+import select.system.dto.Message;
 import select.system.dto.LoginRequest;
+import select.system.dto.MyTransaction;
 import select.system.dto.PayBillReq;
 import select.system.service.UserService;
 import select.util.PageBean;
 import select.util.Results;
-
+import com.rivescript.RiveScript;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import select.system.chatbot.RiveScriptChatbot;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Project: OP-Bank
@@ -38,10 +45,43 @@ import java.util.Map;
 @RequestMapping("/sys/user")
 public class UserController {
 
+        // private RiveScript chatbot;
+
+
+    @Autowired
+    ObjectMapper objectMapper;
     @Autowired
     UserService userService ;
 
- 
+    @Autowired
+    private RiveScriptChatbot chatbot; // Inject the chatbot
+    
+    @PostMapping("/chat")
+    public String chatWithBot(@RequestBody Message req) {
+        // String msg = convertJsonToString(userMessage);
+        // System.out.println("userMessage is: "+userMessage);
+        System.out.println("msg is: "+req.getUserMessage());
+        String userMessage = req.getUserMessage();
+        // return req.getUserMessage();
+        String botResponse = chatbot.getBotResponse(userMessage);
+        System.out.println("response: " + botResponse);
+        return botResponse;
+    }
+
+    public String convertJsonToString(Object yourJsonObject) {
+        try {
+            // Convert the JSON object to a String
+            return objectMapper.writeValueAsString(yourJsonObject);
+        } catch (JsonProcessingException e) {
+            // Handle the exception, e.g., log it or throw a custom exception
+            e.printStackTrace();
+            return "error";
+        }
+    }
+    
+
+
+
     @GetMapping("/selectById")
     public Result selectByName(@RequestParam("userId") int userId ){
         return Results.successWithData(userService.selectById(userId) , BaseEnums.SUCCESS.code()) ;
@@ -136,8 +176,10 @@ public class UserController {
 
 
     @PostMapping("/payByPayID")
-    public boolean payByPayID(@RequestBody PayByPayIDReq req, @RequestParam("userID") int userID,  HttpServletResponse response){
-        return userService.payByPayID(req.getPayID(), req.getAmount(), req.getReason(), userID, response);
+    public boolean payByPayID(@RequestBody PayByPayIDReq req, @RequestParam("userID") int userID, 
+     HttpServletResponse response){
+       System.out.println("payId: "+req.getPayId());
+        return userService.payByPayID(req.getPayId(), req.getAmount(), userID, response);
     }
 
     @PostMapping("/payBill")
@@ -150,6 +192,11 @@ public class UserController {
      @GetMapping("/getAccountMoney")
     public double getAccountMoney( @RequestParam("userID") int userID, HttpServletResponse response){
         return userService.getAccountMoneyFunction(userID, response);
+    }
+
+    @GetMapping("/getAllTransactions")
+    public List<MyTransaction> getAllTransactions(@RequestParam int userID, HttpServletResponse response) {
+        return userService.getAllTransactions(userID, response);
     }
 
     //query  transfer  save  withdraw

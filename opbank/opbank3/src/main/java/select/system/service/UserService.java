@@ -1,6 +1,7 @@
 package select.system.service;
 
 import select.base.Result;
+import select.system.dto.MyTransaction;
 import select.system.dto.User;
 import select.util.PageBean;
 
@@ -50,10 +51,12 @@ public interface UserService {
     public boolean payByAccountNumber(int destAccNumber, int bsbNumber, double amount, String reason,
      int userID, HttpServletResponse response) ;
 
-    public boolean payByPayID(int payID, double amount, String reason, int userID, HttpServletResponse response) ;
+    public boolean payByPayID(int payID, double amount, int userID, HttpServletResponse response) ;
 
     public boolean payBill(int referenceNumber, int billerCode, double amount, String nickname, 
     int userID, HttpServletResponse response) ;
+
+    List<MyTransaction> getAllTransactions(int userID, HttpServletResponse response);
 
 
      public double getAccountMoneyFunction(int userID, HttpServletResponse response);

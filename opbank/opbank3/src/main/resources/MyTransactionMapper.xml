@@ -17,13 +17,17 @@
         WHERE id = #{id}
     </select>
 
-    <select id="selectByAccountNumber" resultMap="MyTransactionMap">
-        SELECT *
-        FROM MyTransaction
-        WHERE receiver_accountNumber = #{accountNumber}
-        OR
-        sender_accountNumber = #{accountNumber}
-    </select>
+  <select id="selectByAccountNumber" resultMap="MyTransactionMap">
+    SELECT *
+    FROM MyTransaction
+    WHERE referenceNumber = 0 AND
+    <!-- (    receiver_accountNumber IS NOT NULL AND receiver_accountNumber = #{accountNumber})
+    OR -->
+    (sender_accountNumber = #{accountNumber}
+    OR
+    receiver_accountNumber = #{accountNumber})
+</select>
+
 
     <insert id="insertOne" parameterType="select.system.dto.MyTransaction">
         INSERT INTO MyTransaction (sender_accountNumber, receiver_accountNumber, reason, amount, transDate, referenceNumber)

@@ -22,7 +22,7 @@
 
 <select id="selectByPayID" resultType="User">
         SELECT *
-        FROM Account
+        FROM sys_user
         WHERE payId = #{payId}
     </select>
 

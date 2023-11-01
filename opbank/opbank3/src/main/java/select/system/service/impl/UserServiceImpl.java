@@ -216,9 +216,11 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
-    public boolean payByPayID(int payID, double amount, String reason, int userID,
-     HttpServletResponse response){
-        User destUserObj = userMapper.selectByPayID(payID);
+    public boolean payByPayID(int payId, double amount, int userID, HttpServletResponse response){
+        System.out.println("payId: "+payId);
+        System.out.println("userID: "+userID);
+        User destUserObj = userMapper.selectByPayID(payId);
+        System.out.println("destUzserObk: "+destUserObj);
         int destUserID = destUserObj.getUserId();
         Account destAccountObj = accountMapper.selectByUserID(destUserID);
         System.out.println("dest acc Number is:"+destAccountObj.getAccountNumber());
@@ -237,8 +239,7 @@ public class UserServiceImpl implements UserService {
                     int senderAccountNumber = senderAccount.getAccountNumber();
                     int receiverAccountNumber = destAccountObj.getAccountNumber();
                    //System.out.println("reason is: "+reason);
-                    MyTransaction mt = new MyTransaction(senderAccountNumber, receiverAccountNumber,
-                     reason, amount);
+                    MyTransaction mt = new MyTransaction(senderAccountNumber, amount, receiverAccountNumber);
                     boolean trans = myTransactionMapper.insertOne(mt);
                     if(trans) System.out.println("transaction saved successfully");
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -314,6 +315,18 @@ public class UserServiceImpl implements UserService {
         double money = account.getAmount();
         response.setStatus(HttpServletResponse.SC_OK);
         return money;
+    }
+
+    @Override
+    public List<MyTransaction> getAllTransactions(int userID, HttpServletResponse response) {
+        Account account = accountMapper.selectByUserID(userID);
+        System.out.println("account data:"+account.getAccountNumber());
+        int accountNumber = account.getAccountNumber();
+        if(accountNumber <= 0 ){
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND); 
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
+        return myTransactionMapper.selectByAccountNumber(accountNumber);
     }
 
 

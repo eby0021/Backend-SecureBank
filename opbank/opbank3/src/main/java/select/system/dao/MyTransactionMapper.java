@@ -19,8 +19,5 @@ public interface MyTransactionMapper {
     
     public boolean insertOneBill(MyTransaction myTransaction) ;
 
-
-
-
     // Define other methods for working with MyTransaction as needed
 }

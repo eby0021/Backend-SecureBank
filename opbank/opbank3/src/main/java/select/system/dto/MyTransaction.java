@@ -95,6 +95,13 @@ public class MyTransaction implements Serializable {
         this.transDate = new Date(); // Set the transDate to the current date and time
     }
 
+     public MyTransaction(int senderAccount, double amount, int receiverAccount ) {
+        this.sender_accountNumber = senderAccount;
+        this.receiver_accountNumber = receiverAccount;
+        this.amount = amount;
+        this.transDate = new Date(); // Set the transDate to the current date and time
+    }
+
      public MyTransaction(int senderAccount, int referenceNumber, double amount) {
         this.referenceNumber = referenceNumber;
         this.amount = amount;
