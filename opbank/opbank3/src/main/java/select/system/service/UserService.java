@@ -4,11 +4,13 @@ import select.base.Result;
 import select.system.dto.MyTransaction;
 import select.system.dto.User;
 import select.util.PageBean;
-
+import select.system.dto.UserProfile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+
 
 /**
  * Project: OP-Bank
@@ -59,7 +61,23 @@ public interface UserService {
     List<MyTransaction> getAllTransactions(int userID, HttpServletResponse response);
 
 
-     public double getAccountMoneyFunction(int userID, HttpServletResponse response);
+    public double getAccountMoneyFunction(int userID, HttpServletResponse response);
+
+    public double getTotalDebit(int userID, HttpServletResponse response);
+
+    public double getTotalCredit(int userID, HttpServletResponse response);
+
+    public double getLastDebit(int userID, HttpServletResponse response);
+
+    public double getLastCredit(int userID, HttpServletResponse response);
+
+
+    public UserProfile getProfile(int userID, HttpServletResponse response);
+
+
+    public boolean getProfile(String firstName, String mobileNumber, String email, Date dateOfBirth,
+                           String password, int userID, HttpServletResponse response);
+
 
     // //transfer
     // public String  transferAccount(double accountMoney , int targetAccount , HttpServletRequest request) ;

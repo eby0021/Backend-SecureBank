@@ -19,9 +19,9 @@
         FROM Card
     </select>
 
-   <insert id="insertOne" parameterType="select.system.dto.Card">
-    INSERT INTO Card (number)
-    VALUES (#{number})
+   <insert id="insertOne" parameterType="Integer">
+   INSERT INTO sys_user (number, userID, is_blocked, is_activated, expiration_date)
+    VALUES (#{number}, #{userID})
 </insert>
 
 </mapper>

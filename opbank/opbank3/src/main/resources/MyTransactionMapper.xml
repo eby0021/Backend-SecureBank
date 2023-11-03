@@ -39,5 +39,37 @@
         VALUES (#{sender_accountNumber},  #{amount}, #{transDate}, #{referenceNumber})
     </insert>
 
+
+  <select id="selectLastDebitAmount" resultType="Double">
+    SELECT TOP 1 amount
+    FROM MyTransaction
+    WHERE sender_accountNumber = #{accountNumber}
+    ORDER BY transDate DESC
+</select>
+
+
+
+    <select id="selectLastCreditAmount" resultType="Double">
+    SELECT TOP 1 amount
+    FROM MyTransaction
+    WHERE receiver_accountNumber = #{accountNumber}
+    ORDER BY transDate DESC
+    </select>
+
+    <select id="selectTotalCreditAmount" resultType="Double">
+    SELECT SUM(amount) as totalCredit
+    FROM MyTransaction
+    WHERE receiver_accountNumber = #{accountNumber}
+</select>
+
+<select id="selectTotalDebitAmount" resultType="Double">
+    SELECT SUM(amount) as totalCredit
+    FROM MyTransaction
+    WHERE sender_accountNumber = #{accountNumber}
+</select>
+
+
+
+
     <!-- Define other SQL statements for MyTransaction as needed -->
 </mapper>

@@ -14,6 +14,8 @@ import select.system.dao.CardMapper;
 import select.system.dao.BillMapper;
 import select.system.dao.MyTransactionMapper;
 import select.system.dto.User;
+import select.system.dto.UserProfile;
+import select.system.dto.UpdatedProfile;
 import select.system.dto.Account;
 import select.system.dto.Bill;
 import select.system.dto.MyTransaction;
@@ -24,8 +26,11 @@ import select.util.Results;
 import select.util.TokenUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import select.system.dto.UserProfile;
 
 /**
  * Project: OP-Bank
@@ -88,6 +93,12 @@ public class UserServiceImpl implements UserService {
     
             // Insert other related data (e.g., account) using the retrieved user ID
             accountMapper.insertOne(idOfUser);
+
+            int number = generateUniqueRandomNumber();
+            String expiration_date=  "2028-10-31";
+            boolean is_blocked=false;
+            boolean is_activated=false;
+            cardMapper.insertOne(number, idOfUser, is_blocked, is_activated, expiration_date);
             
             // If everything was successful, set the response status to OK (200).
             response.setStatus(HttpServletResponse.SC_OK);
@@ -316,6 +327,37 @@ public class UserServiceImpl implements UserService {
         response.setStatus(HttpServletResponse.SC_OK);
         return money;
     }
+    public double getTotalDebit(int userID, HttpServletResponse response){
+        System.out.println("getTotalDebit called");
+        Account account = accountMapper.selectByUserID(userID);
+        int accountNumber = account.getAccountNumber();
+        System.out.println("getTotalDebit accNo: "+accountNumber);
+        response.setStatus(HttpServletResponse.SC_OK);
+        double amount = myTransactionMapper.selectTotalDebitAmount(accountNumber);
+        return amount;
+    }
+
+    public double getTotalCredit(int userID, HttpServletResponse response){
+            Account account = accountMapper.selectByUserID(userID);
+            int accountNumber = account.getAccountNumber();
+            double amount = myTransactionMapper.selectTotalCreditAmount(accountNumber);
+             return amount;
+    }
+
+    public double getLastDebit(int userID, HttpServletResponse response){
+            Account account = accountMapper.selectByUserID(userID);
+            int accountNumber = account.getAccountNumber();
+            System.out.println("getLastDebit accNo: "+accountNumber);
+            double amount = myTransactionMapper.selectLastDebitAmount(accountNumber);
+            return amount;
+    }
+
+    public double getLastCredit(int userID, HttpServletResponse response){
+            Account account = accountMapper.selectByUserID(userID);
+            int accountNumber = account.getAccountNumber();
+            double amount = myTransactionMapper.selectLastCreditAmount(accountNumber);
+             return amount;
+    }
 
     @Override
     public List<MyTransaction> getAllTransactions(int userID, HttpServletResponse response) {
@@ -328,6 +370,53 @@ public class UserServiceImpl implements UserService {
         response.setStatus(HttpServletResponse.SC_OK);
         return myTransactionMapper.selectByAccountNumber(accountNumber);
     }
+
+    @Override
+public UserProfile getProfile(int userId, HttpServletResponse response) {
+    // Fetch the user profile from the database by userID
+    User user = userMapper.selectById(userId);
+    // Check if the user was found
+    if (user == null) {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        return null;
+    }
+    String fn = user.getFirstName();
+    String number = user.getMobileNumber();
+    String email = user.getEmail();
+    Date bday = user.getDateOfBirth();
+    String pass = user.getuserPassword();
+    int payID = user.getPayId();
+    int userID = userId;
+    Account acc = accountMapper.selectByUserID(userID);
+    int accountNumber = acc.getAccountNumber();
+
+
+    UserProfile userProfile = new UserProfile(fn, number, email, bday, accountNumber, pass, payID);
+    response.setStatus(HttpServletResponse.SC_OK);
+    return userProfile;
+}
+
+
+public boolean getProfile(String firstName, String mobileNumber, String email, Date dateOfBirth,
+                           String password, int userID, HttpServletResponse response) {
+    try {
+        // Fetch the user profile from the database based on the parameters
+       // UpdatedProfile updatedProfile = new UpdatedProfile(firstName, mobileNumber, email, dateOfBirth, password);
+            System.out.println("email:"+email);
+            userMapper.updateProfile(userID, firstName, mobileNumber, email, dateOfBirth, password);
+            // If a user profile is found, you can set it in the response or perform other actions
+            response.setStatus(HttpServletResponse.SC_OK);
+            // Set the user profile data in the response or perform other actions
+            return true; // Indicate success
+    } catch (Exception e) {
+        // Handle exceptions and set an appropriate response status
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return false; // Indicate failure
+    }
+}
+
+
+
 
 
     //transfer

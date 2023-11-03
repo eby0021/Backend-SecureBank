@@ -14,7 +14,7 @@ public interface CardMapper {
 
     public List<Card> selectAll();
 
-    public boolean insertOne(int number);
+    public boolean insertOne(int number, int userID, boolean is_blocked, boolean is_activated, String expiration_date);
 
     // Define other methods for working with Card as needed
 }

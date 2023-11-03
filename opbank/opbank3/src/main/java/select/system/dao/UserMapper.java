@@ -7,6 +7,8 @@ import select.util.PageBean;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+
 
 /**
  * Project: OP-Bank
@@ -67,5 +69,7 @@ public interface UserMapper {
     public boolean accountInInsert(String email ,int accountNumber , double accountMoney  , String accountType) ;
     public boolean accountInInsert(String email ,int accountNumber , double accountMoney  , 
     int targetAccount, String accountType) ;
+
+    public boolean updateProfile(int userId, String firstName, String mobileNumber, String email, Date dateOfBirth, String password);
 
 }

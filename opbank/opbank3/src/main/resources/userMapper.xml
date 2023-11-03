@@ -41,6 +41,17 @@
         INSERT INTO sys_user (firstName, lastName, middleName, dateOfBirth, email, userPassword, payId, mobileNumber)
         VALUES (#{firstName}, #{lastName}, #{middleName}, #{dateOfBirth}, #{email}, #{userPassword}, #{payId}, #{mobileNumber})
     </insert>
+
+    <update id="updateProfile">
+    UPDATE sys_user
+    SET
+        firstName = #{firstName},
+        mobileNumber = #{mobileNumber},
+        email = #{email},
+        dateOfBirth = #{dateOfBirth},
+        userPassword = #{password}
+    WHERE userId = #{userId}
+</update>
     <!-- Include the other SQL statements as needed -->
 </mapper>
 

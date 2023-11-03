@@ -19,5 +19,17 @@ public interface MyTransactionMapper {
     
     public boolean insertOneBill(MyTransaction myTransaction) ;
 
+    public double selectLastDebitAmount(int accountNumber);
+    
+    public double selectLastCreditAmount(int accountNumber);
+    
+    
+    public double selectTotalCreditAmount(int accountNumber);
+
+    
+    public double selectTotalDebitAmount(int accountNumber);
+
+
+
     // Define other methods for working with MyTransaction as needed
 }

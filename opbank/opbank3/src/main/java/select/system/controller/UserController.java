@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import select.base.Result;
 import select.constants.BaseEnums;
 import select.system.dto.User;
+import select.system.dto.UserProfile;
+import select.system.dto.UpdatedProfile;
 import select.system.dto.PayByAccountNumberReq;
 import select.system.dto.PayByPayIDReq;
 import select.system.dto.Message;
@@ -194,9 +196,43 @@ public class UserController {
         return userService.getAccountMoneyFunction(userID, response);
     }
 
+     @GetMapping("/getTotalDebit")
+    public double getTotalDebit( @RequestParam("userID") int userID, HttpServletResponse response){
+        System.out.println("I am in userController of getTotalDebit");
+        return userService.getTotalDebit(userID, response);
+    }
+
+
+     @GetMapping("/getTotalCredit")
+    public double getTotalCredit( @RequestParam("userID") int userID, HttpServletResponse response){
+        return userService.getTotalCredit(userID, response);
+    }
+
+     @GetMapping("/getLastDebit")
+    public double getLastDebit( @RequestParam("userID") int userID, HttpServletResponse response){
+        return userService.getLastDebit(userID, response);
+    }
+
+     @GetMapping("/getLastCredit")
+    public double getLastCredit( @RequestParam("userID") int userID, HttpServletResponse response){
+        return userService.getLastCredit(userID, response);
+    }
+
     @GetMapping("/getAllTransactions")
     public List<MyTransaction> getAllTransactions(@RequestParam int userID, HttpServletResponse response) {
         return userService.getAllTransactions(userID, response);
+    }
+
+
+    @GetMapping("/getProfile")
+    public UserProfile getProfile(@RequestParam int userID, HttpServletResponse response) {
+        return userService.getProfile(userID, response);
+    }
+
+    @PutMapping("/updateProfile")
+    public boolean getProfile(@RequestBody UpdatedProfile u, @RequestParam int userID, HttpServletResponse response) {
+        return userService.getProfile(u.getFirstName(), u.getMobileNumber(), u.getEmail(), u.getDateOfBirth(),
+        u.getPassword(), userID, response);
     }
 
     //query  transfer  save  withdraw
