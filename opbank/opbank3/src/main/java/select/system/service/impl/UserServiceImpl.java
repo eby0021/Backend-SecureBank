@@ -14,6 +14,7 @@ import select.system.dao.CardMapper;
 import select.system.dao.BillMapper;
 import select.system.dao.MyTransactionMapper;
 import select.system.dto.User;
+import select.system.dto.Card;
 import select.system.dto.UserProfile;
 import select.system.dto.UpdatedProfile;
 import select.system.dto.Account;
@@ -95,6 +96,7 @@ public class UserServiceImpl implements UserService {
             accountMapper.insertOne(idOfUser);
 
             int number = generateUniqueRandomNumber();
+            System.out.println("number: "+number);
             String expiration_date=  "2028-10-31";
             boolean is_blocked=false;
             boolean is_activated=false;
@@ -417,6 +419,48 @@ public boolean getProfile(String firstName, String mobileNumber, String email, D
 
 
 
+@Override
+    public boolean verifyCard(int id, int number, String expirationDate, int userId, HttpServletResponse response) {
+        try {
+            // You can perform additional validations and logic here if needed.
+            // For example, check if the card details are valid before inserting into the database.
+
+            // Assuming cardMapper.insertOne inserts the card details into the database.
+            // This method will vary based on your database and SQL mapper.
+            Card c = cardMapper.selectById(id);
+            if(c==null){
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return false;
+            }
+            System.out.println("c.getExpirstion"+c.getExpirationDate());
+                        System.out.println("Expiration: "+expirationDate);
+                        System.out.println("getNumber"+c.getNumber());
+                        System.out.println("number: "+number);
+
+
+            if(c.getExpirationDate().equals(expirationDate)){
+                if(c.getNumber()==number){
+                System.out.println("SC IS OK");
+                response.setStatus(HttpServletResponse.SC_OK);
+                return true;
+                } else{
+                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return false;
+                }
+                
+            } else{
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return false;
+            }
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during card verification.
+            e.printStackTrace();
+            // You can set an appropriate response in your HttpServletResponse.
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return false;
+        }
+    }
+
 
 
     //transfer
@@ -529,6 +573,7 @@ public boolean getProfile(String firstName, String mobileNumber, String email, D
         Random random = new Random();
         // Generate a random number of up to 4 digits
         int randomValue = random.nextInt(10000);
+        System.out.println("randomvalue: "+randomValue);
     
         // Combine the current time and random number to create a 16-digit unique number
        // int uniqueNumber = (currentTime * 1000000L) + randomValue;

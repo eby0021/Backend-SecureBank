@@ -14,6 +14,7 @@ import select.system.dto.PayByAccountNumberReq;
 import select.system.dto.PayByPayIDReq;
 import select.system.dto.Message;
 import select.system.dto.LoginRequest;
+import select.system.dto.VerifyCard;
 import select.system.dto.MyTransaction;
 import select.system.dto.PayBillReq;
 import select.system.service.UserService;
@@ -233,6 +234,14 @@ public class UserController {
     public boolean getProfile(@RequestBody UpdatedProfile u, @RequestParam int userID, HttpServletResponse response) {
         return userService.getProfile(u.getFirstName(), u.getMobileNumber(), u.getEmail(), u.getDateOfBirth(),
         u.getPassword(), userID, response);
+    }
+
+    @PostMapping("/verifyCard")
+    public boolean verifyCard(@RequestBody VerifyCard v, @RequestParam int userID, HttpServletResponse response) {
+        System.out.println("ecp at ctrl is: "+v.getExpirationDate());
+                System.out.println("number at ctrl is: "+v.getNumber());
+
+        return userService.verifyCard(v.getId(), v.getNumber(), v.getExpirationDate(), userID, response);
     }
 
     //query  transfer  save  withdraw

@@ -79,6 +79,9 @@ public interface UserService {
                            String password, int userID, HttpServletResponse response);
 
 
+    boolean verifyCard(int id, int number, String expirationDate, int userId, HttpServletResponse response);
+
+
     // //transfer
     // public String  transferAccount(double accountMoney , int targetAccount , HttpServletRequest request) ;
 

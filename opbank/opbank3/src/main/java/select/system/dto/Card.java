@@ -1,7 +1,6 @@
 package select.system.dto;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity
 @Table(name = "Card")
@@ -12,11 +11,10 @@ public class Card implements Serializable {
     private int id;
 
     @Column(name = "number", unique = true, length = 50)
-    private String number;
+    private int number;
 
     @Column(name = "expiration_date")
-    @Temporal(TemporalType.DATE)
-    private Date expirationDate;
+    private String expirationDate;
 
     @Column(name = "is_blocked")
     private boolean isBlocked;
@@ -33,19 +31,19 @@ public class Card implements Serializable {
         this.id = id;
     }
 
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
-    public Date getExpirationDate() {
+    public String getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
     }
 
