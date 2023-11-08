@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import select.base.Result;
 import select.constants.BaseEnums;
 import select.system.dto.User;
+import select.system.dto.UserMessage;
 import select.system.dto.UserProfile;
 import select.system.dto.UpdatedProfile;
 import select.system.dto.PayByAccountNumberReq;
@@ -21,6 +22,9 @@ import select.system.service.UserService;
 import select.util.PageBean;
 import select.util.Results;
 import com.rivescript.RiveScript;
+
+import select.system.dto.UserMessageReq;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -59,18 +63,7 @@ public class UserController {
     @Autowired
     private RiveScriptChatbot chatbot; // Inject the chatbot
     
-    @PostMapping("/chat")
-    public String chatWithBot(@RequestBody Message req) {
-        // String msg = convertJsonToString(userMessage);
-        // System.out.println("userMessage is: "+userMessage);
-        System.out.println("msg is: "+req.getUserMessage());
-        String userMessage = req.getUserMessage();
-        // return req.getUserMessage();
-        String botResponse = chatbot.getBotResponse(userMessage);
-        System.out.println("response: " + botResponse);
-        return botResponse;
-    }
-
+   
     public String convertJsonToString(Object yourJsonObject) {
         try {
             // Convert the JSON object to a String
@@ -227,6 +220,7 @@ public class UserController {
 
     @GetMapping("/getProfile")
     public UserProfile getProfile(@RequestParam int userID, HttpServletResponse response) {
+        System.out.println("userID is: "+userID);
         return userService.getProfile(userID, response);
     }
 
@@ -278,6 +272,40 @@ public class UserController {
 
         return userService.verifyCard(v.getId(), v.getNumber(), v.getExpirationDate(), userID, response);
     }
+
+     @PostMapping("/chat")
+    public String chatWithBot(@RequestBody Message req, @RequestParam("userID") int userID, HttpServletResponse response) {
+        // String msg = convertJsonToString(userMessage);
+        // System.out.println("userMessage is: "+userMessage);
+        System.out.println("msg is: "+req.getUserMessage());
+        String userMessage = req.getUserMessage();
+        // return req.getUserMessage();
+        String botResponse = chatbot.getBotResponse(userMessage);
+        System.out.println("response: " + botResponse);
+        if(botResponse.equals("ERR: No Reply Matched")){
+            System.out.println("error");
+        } else{
+        boolean saved = userService.insertChat(userMessage, botResponse, userID, response);
+        }
+        return botResponse;
+    }
+
+
+
+
+    @PostMapping("/insertChat")
+    public boolean insertChat(@RequestBody UserMessageReq message, @RequestParam("userID") int userID, HttpServletResponse response) {
+    System.out.println("userID in insertChat is: " + userID);
+    return userService.insertChat(message.getUserMessage(), message.getAnswer(), userID, response);
+}
+
+
+@GetMapping("/getAllMessages")
+    public List<UserMessage> getAllMessages(@RequestParam("userID") int userID, HttpServletResponse response) {
+    System.out.println("userID in getAllMessages is: " + userID);
+    return userService.getAllMessages( userID, response);
+}
+
 
     //query  transfer  save  withdraw
     //query

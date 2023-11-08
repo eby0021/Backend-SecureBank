@@ -12,9 +12,11 @@ import select.system.dao.UserMapper;
 import select.system.dao.AccountMapper;
 import select.system.dao.CardMapper;
 import select.system.dao.BillMapper;
+import select.system.dao.UserMessageMapper;
 import select.system.dao.MyTransactionMapper;
 import select.system.dto.User;
 import select.system.dto.Card;
+import select.system.dto.UserMessage;
 import select.system.dto.UserProfile;
 import select.system.dto.UpdatedProfile;
 import select.system.dto.Account;
@@ -70,6 +72,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     BillMapper billMapper ;
+
+    @Autowired
+    UserMessageMapper userMessageMapper;
 
     // public User selectByEmail(String email) {
     //   return  userMapper.selectByEmail(email) ;
@@ -505,6 +510,19 @@ public boolean getProfile(String firstName, String mobileNumber, String email, D
         }
      }
 
+     @Override
+     public boolean insertChat(String userMessage, String answer, int userID, HttpServletResponse response)
+     {  
+        System.out.println("answer is: "+answer);
+        boolean result = userMessageMapper.insertMessage(userMessage, answer, userID);
+        return result;
+     }
+     
+     @Override
+     public List<UserMessage> getAllMessages(int userID, HttpServletResponse response)
+     {
+       return userMessageMapper.getAllMessages(userID);
+     }
 
 
 

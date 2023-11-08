@@ -7,6 +7,9 @@ import select.util.PageBean;
 import select.system.dto.UserProfile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import select.system.dto.UserMessage;
+
 import java.util.List;
 import java.util.Map;
 import java.net.http.HttpResponse;
@@ -93,6 +96,11 @@ public interface UserService {
 
 
     public boolean unblockCard(int userID, HttpServletResponse response);
+
+    public boolean insertChat(String userMessage, String answer, int userID, HttpServletResponse response);
+
+    
+    public List<UserMessage> getAllMessages(int userID, HttpServletResponse response);
 
 
     // //transfer
