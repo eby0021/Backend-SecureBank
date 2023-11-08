@@ -16,5 +16,16 @@ public interface CardMapper {
 
     public boolean insertOne(int number, int userID, boolean is_blocked, boolean is_activated, String expiration_date);
 
+    public Boolean getActiveStatus(int userID);
+
+    public Boolean getBlockedStatus(int userID);
+
+    public boolean activateCard(int userID);
+
+    public boolean blockCard(int userID);
+
+    public boolean unblockCard(int userID);
+
+
     // Define other methods for working with Card as needed
 }

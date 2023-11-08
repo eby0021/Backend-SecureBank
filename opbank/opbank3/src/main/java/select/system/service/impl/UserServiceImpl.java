@@ -28,6 +28,7 @@ import select.util.TokenUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.net.http.HttpResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -428,6 +429,7 @@ public boolean getProfile(String firstName, String mobileNumber, String email, D
             // Assuming cardMapper.insertOne inserts the card details into the database.
             // This method will vary based on your database and SQL mapper.
             Card c = cardMapper.selectById(id);
+            System.out.println("userId is:"+userId);
             if(c==null){
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return false;
@@ -441,6 +443,8 @@ public boolean getProfile(String firstName, String mobileNumber, String email, D
             if(c.getExpirationDate().equals(expirationDate)){
                 if(c.getNumber()==number){
                 System.out.println("SC IS OK");
+
+                cardMapper.activateCard(userId);
                 response.setStatus(HttpServletResponse.SC_OK);
                 return true;
                 } else{
@@ -460,6 +464,48 @@ public boolean getProfile(String firstName, String mobileNumber, String email, D
             return false;
         }
     }
+    @Override
+        public boolean getActiveStatus(int userID, HttpServletResponse response){
+            boolean is_activated = cardMapper.getActiveStatus(userID);
+            System.out.println("is_activated is: "+is_activated);
+           // is_activated = true;
+            return is_activated;
+        }
+
+
+         @Override
+        public boolean getBlockedStatus(int userID, HttpServletResponse response){
+            boolean is_blocked = cardMapper.getBlockedStatus(userID);
+            System.out.println("is_activated is: "+is_blocked);
+           // is_activated = true;
+            return is_blocked;
+        }
+       
+     @Override
+     public boolean blockCard(int userID, HttpServletResponse response){
+        boolean status = cardMapper.blockCard(userID);
+        if(status==true){
+        response.setStatus(HttpServletResponse.SC_OK);
+        return status;
+        } else{
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return status;
+        }
+     }
+
+      @Override
+     public boolean unblockCard(int userID, HttpServletResponse response){
+        boolean status = cardMapper.unblockCard(userID);
+        if(status==true){
+        response.setStatus(HttpServletResponse.SC_OK);
+        return status;
+        } else{
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return status;
+        }
+     }
+
+
 
 
 
@@ -569,16 +615,13 @@ public boolean getProfile(String firstName, String mobileNumber, String email, D
     }
 
     public int generateUniqueRandomNumber() {
-       // int currentTime = System.currentTimeMillis();
         Random random = new Random();
-        // Generate a random number of up to 4 digits
-        int randomValue = random.nextInt(10000);
-        System.out.println("randomvalue: "+randomValue);
-    
-        // Combine the current time and random number to create a 16-digit unique number
-       // int uniqueNumber = (currentTime * 1000000L) + randomValue;
+        // Generate a random number between 100000 and 999999
+        int randomValue = 100000 + random.nextInt(900000);
+        System.out.println("random value: " + randomValue);
     
         return randomValue;
     }
+    
     
 }

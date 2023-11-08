@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.net.http.HttpResponse;
 import java.util.Date;
 
 
@@ -79,7 +80,19 @@ public interface UserService {
                            String password, int userID, HttpServletResponse response);
 
 
-    boolean verifyCard(int id, int number, String expirationDate, int userId, HttpServletResponse response);
+    public boolean verifyCard(int id, int number, String expirationDate, int userId, HttpServletResponse response);
+
+
+    public boolean getActiveStatus(int userID, HttpServletResponse response);
+
+
+    public boolean getBlockedStatus(int userID, HttpServletResponse response);
+
+
+    public boolean blockCard(int userID, HttpServletResponse response);
+
+
+    public boolean unblockCard(int userID, HttpServletResponse response);
 
 
     // //transfer

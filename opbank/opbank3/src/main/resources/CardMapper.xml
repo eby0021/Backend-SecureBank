@@ -6,6 +6,8 @@
         <result property="number" column="number" />
         <result property="expirationDate" column="expiration_date" />
         <result property="isBlocked" column="is_blocked" />
+        <result property="isActivated" column="is_activated" />
+
     </resultMap>
 
     <select id="selectById" resultType="Card">
@@ -23,5 +25,37 @@
    INSERT INTO Card (number, userID, is_blocked, is_activated, expiration_date)
     VALUES (#{number}, #{userID}, #{is_blocked}, #{is_activated}, #{expiration_date})
 </insert>
+
+ <select id="getActiveStatus" resultType="boolean" parameterType="int">
+        SELECT is_activated FROM Card WHERE userID = #{userID}
+    </select>
+
+
+     <update id="activateCard" parameterType="int">
+        UPDATE Card
+        SET is_activated = 1
+        WHERE userID = #{userID}
+    </update>
+
+    <update id="blockCard">
+  UPDATE Card
+  SET is_blocked = 1
+  WHERE userID = #{userID}
+</update>
+
+
+<update id="unblockCard">
+  UPDATE Card
+  SET is_blocked = 0
+  WHERE userID = #{userID}
+</update>
+
+
+<select id="getBlockedStatus" resultType="boolean" parameterType="int">
+  SELECT is_blocked
+  FROM Card
+  WHERE userID = #{userID}
+</select>
+
 
 </mapper>

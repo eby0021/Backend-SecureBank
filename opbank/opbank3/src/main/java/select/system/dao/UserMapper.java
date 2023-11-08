@@ -70,6 +70,7 @@ public interface UserMapper {
     public boolean accountInInsert(String email ,int accountNumber , double accountMoney  , 
     int targetAccount, String accountType) ;
 
-    public boolean updateProfile(int userId, String firstName, String mobileNumber, String email, Date dateOfBirth, String password);
+    public boolean updateProfile(int userId, String firstName, String mobileNumber, String email,
+     Date dateOfBirth, String password);
 
 }

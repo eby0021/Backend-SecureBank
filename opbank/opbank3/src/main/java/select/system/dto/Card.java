@@ -19,6 +19,10 @@ public class Card implements Serializable {
     @Column(name = "is_blocked")
     private boolean isBlocked;
 
+
+    @Column(name = "is_activated")
+    private boolean isActivated;
+
     @OneToOne
     @JoinColumn(name = "userID")
     private User user;
@@ -47,12 +51,20 @@ public class Card implements Serializable {
         this.expirationDate = expirationDate;
     }
 
-    public boolean isBlocked() {
+    public boolean getIsBlocked() {
         return isBlocked;
     }
 
     public void setBlocked(boolean blocked) {
         isBlocked = blocked;
+    }
+
+     public boolean getIsActive() {
+        return isActivated;
+    }
+
+    public void setActive(boolean isActivated) {
+        isActivated = isActivated;
     }
 
     public User getUser() {

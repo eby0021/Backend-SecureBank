@@ -230,11 +230,46 @@ public class UserController {
         return userService.getProfile(userID, response);
     }
 
+
+    @GetMapping("/cardActive")
+    public boolean getActiveStatus(@RequestParam int userID, HttpServletResponse response) {
+        boolean active = userService.getActiveStatus(userID, response);
+        System.out.println("active is: "+active);
+        return active;
+
+    }
+
+
+    
+    @GetMapping("/cardBlocked")
+    public boolean getBlockedStatus(@RequestParam int userID, HttpServletResponse response) {
+        boolean blocked = userService.getBlockedStatus(userID, response);
+        System.out.println("blocked is: "+blocked);
+        return blocked;
+
+    }
+
+
     @PutMapping("/updateProfile")
     public boolean getProfile(@RequestBody UpdatedProfile u, @RequestParam int userID, HttpServletResponse response) {
         return userService.getProfile(u.getFirstName(), u.getMobileNumber(), u.getEmail(), u.getDateOfBirth(),
         u.getPassword(), userID, response);
     }
+
+
+
+    @PutMapping("/blockCard")
+    public boolean blockCard( @RequestParam int userID, HttpServletResponse response) {
+        return userService.blockCard(userID, response);
+    }
+
+
+    @PutMapping("/unblockCard")
+    public boolean unblockCard( @RequestParam int userID, HttpServletResponse response) {
+        return userService.unblockCard(userID, response);
+    }
+
+
 
     @PostMapping("/verifyCard")
     public boolean verifyCard(@RequestBody VerifyCard v, @RequestParam int userID, HttpServletResponse response) {
