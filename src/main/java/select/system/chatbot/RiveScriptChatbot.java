@@ -15,8 +15,9 @@ public class RiveScriptChatbot {
 
     public RiveScriptChatbot() {
       bot = new RiveScript();
-    bot.loadDirectory("D:\\MERN Work\\Secure Bank\\opbank\\opbank3\\src\\main\\java\\select\\system\\chatbot\\rivescript_files");
+    bot.loadDirectory("D:\\MERN Work\\Secure Bank\\src\\main\\java\\select\\system\\chatbot\\rivescript_files");
       bot.sortReplies();
+      
         // Initialize RiveScript bot
         // bot.setDebug(); // Use setDebug() without a boolean parameter
         // try{
