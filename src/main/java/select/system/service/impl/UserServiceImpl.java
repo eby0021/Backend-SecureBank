@@ -280,14 +280,8 @@ public class UserServiceImpl implements UserService {
 
     public boolean payBill(int referenceNumber, int billerCode, double amount, String nickname, int userID,
     HttpServletResponse response) {
-        Account billerAccount = accountMapper.selectByUserID(billerCode);
-    
-        if (billerAccount != null) {
-            System.out.println("Biller account found. Account: " + billerAccount.getAccountNumber());
-            //double billerAmount = billerAccount.getAmount();
-            
+
             Account senderAccount = accountMapper.selectByUserID(userID);
-            
             if (senderAccount != null) {
                 System.out.println("Sender account is not null. Account: " + senderAccount.getAccountNumber());
                 double senderAmount = senderAccount.getAmount();
@@ -319,11 +313,7 @@ public class UserServiceImpl implements UserService {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return false;
             }
-        } else {
-            System.out.println("Biller account not found");
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return false;
-        }
+       
     }
     
     //query
