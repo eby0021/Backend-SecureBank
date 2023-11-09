@@ -47,7 +47,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Why & What is modified: None
  * Version: 0.1.0
  */
-@CrossOrigin(origins = "http://localhost:3000") // Replace with the URL of your frontend
+//@CrossOrigin(origins = "http://localhost:3000") // Replace with the URL of your frontend
 @RestController
 @RequestMapping("/sys/user")
 public class UserController {
