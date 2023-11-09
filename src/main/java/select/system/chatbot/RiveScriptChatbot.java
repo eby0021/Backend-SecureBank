@@ -15,17 +15,10 @@ public class RiveScriptChatbot {
 
     public RiveScriptChatbot() {
       bot = new RiveScript();
-    bot.loadDirectory("D:\\MERN Work\\Secure Bank\\src\\main\\java\\select\\system\\chatbot\\rivescript_files");
+
+    bot.loadDirectory("..\\src\\main\\java\\select\\system\\rivescript_files");
       bot.sortReplies();
-      
-        // Initialize RiveScript bot
-        // bot.setDebug(); // Use setDebug() without a boolean parameter
-        // try{
-        // bot.loadDirectory(new ClassPathResource("rivescript_files").getURL().getPath());
-       // bot.loadDirectory(new ClassPathResource("rivescript_files").getURL().getPath());
-      
-        // }catch(Exception e){
-        // }
+
     }
 
     public String getBotResponse(String userMessage) {
