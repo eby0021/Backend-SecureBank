@@ -75,7 +75,10 @@ public class UserController {
         }
     }
     
-
+        @GetMapping("/")
+    public String home(){
+        return "Hello your server is runing" ;
+    }
 
 
     @GetMapping("/selectById")
