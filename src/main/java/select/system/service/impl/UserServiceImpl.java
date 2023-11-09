@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
                 System.out.println("===========================userID is"+userID);
 
         Account destAccountObj = accountMapper.selectByAccountNumber(destAcc);
-        //System.out.println("dest acc Number is:"+destAccountObj.getAccountNumber());
+        System.out.println("dest acc Number is:"+destAccountObj.getAccountNumber());
       //  double currAmount = destAccountObj.getAmount();
         if(bsbNumber == destAccountObj.getBsbNumber()){
             System.out.println("bsb number entered is correct");
@@ -215,6 +215,8 @@ public class UserServiceImpl implements UserService {
                    // System.out.println("reason is: "+reason);
                     MyTransaction mt = new MyTransaction(senderAccountNumber, receiverAccountNumber,
                      reason, amount);
+                     System.out.println("mt has been made");
+                     System.out.println("heyyyyyyyyyyyyy"+mt.getAmount());
                     boolean trans = myTransactionMapper.insertOne(mt);
                     if(trans) System.out.println("transaction saved successfully");
                     response.setStatus(HttpServletResponse.SC_OK);

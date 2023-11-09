@@ -86,6 +86,9 @@ public class MyTransaction implements Serializable {
     public void setTransDate(Date transDate) {
         this.transDate = transDate;
     }
+    public MyTransaction(){
+
+    }
 
      public MyTransaction(int senderAccount, int receiverAccount, String reason, double amount) {
         this.sender_accountNumber = senderAccount;

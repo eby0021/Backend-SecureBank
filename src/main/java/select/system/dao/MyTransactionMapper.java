@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import select.system.dto.MyTransaction;
 import select.system.dto.User;
+import java.util.Date;
 
 import java.util.List;
 
@@ -15,7 +16,10 @@ public interface MyTransactionMapper {
     
     public List<MyTransaction> selectByAccountNumber(int accountNumber);
 
-    public boolean insertOne(MyTransaction myTransaction) ;
+    // public boolean insertOnePayment(int sender_accountNumber, int receiver_accountNumber, double amount,
+    //  String reason, Date transDate) ;
+
+     public boolean insertOne(MyTransaction myTransaction);
     
     public boolean insertOneBill(MyTransaction myTransaction) ;
 

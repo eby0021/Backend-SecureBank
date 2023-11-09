@@ -20,7 +20,8 @@
   <select id="selectByAccountNumber" resultMap="MyTransactionMap">
     SELECT *
     FROM MyTransaction
-    WHERE referenceNumber = 0 AND
+    WHERE 
+    <!-- referenceNumber = 0 AND -->
     <!-- (    receiver_accountNumber IS NOT NULL AND receiver_accountNumber = #{accountNumber})
     OR -->
     (sender_accountNumber = #{accountNumber}
@@ -30,9 +31,10 @@
 
 
     <insert id="insertOne" parameterType="select.system.dto.MyTransaction">
-        INSERT INTO MyTransaction (sender_accountNumber, receiver_accountNumber, reason, amount, transDate, referenceNumber)
-        VALUES (#{sender_accountNumber}, #{receiver_accountNumber}, #{reason}, #{amount}, #{transDate}, #{referenceNumber})
+        INSERT INTO MyTransaction (sender_accountNumber, receiver_accountNumber, reason, amount, transDate)
+        VALUES (#{sender_accountNumber}, #{receiver_accountNumber}, #{reason}, #{amount}, #{transDate})
     </insert>
+    
 
     <insert id="insertOneBill" parameterType="select.system.dto.MyTransaction">
         INSERT INTO MyTransaction (sender_accountNumber, amount, transDate, referenceNumber)
