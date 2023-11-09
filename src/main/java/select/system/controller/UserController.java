@@ -49,7 +49,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 //@CrossOrigin(origins = "http://localhost:3000") // Replace with the URL of your frontend
 @RestController
-@RequestMapping("/sys/user")
+//@RequestMapping("/sys/user")
 public class UserController {
 
         // private RiveScript chatbot;
