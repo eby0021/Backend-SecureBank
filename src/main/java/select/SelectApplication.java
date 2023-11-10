@@ -4,6 +4,8 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @EntityScan(basePackages = "select.system.dto")
@@ -14,4 +16,12 @@ public class SelectApplication {
         SpringApplication.run(SelectApplication.class, args);
     }
 
+}
+
+@RestController
+public class RootController {
+    @RequestMapping("/")
+    public String root() {
+        return "Hello there!! I am at azure";
+    }
 }
