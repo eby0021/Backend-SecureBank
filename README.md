@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy JAR app to Azure Web App - secure-bank
 
 on:
@@ -48,6 +51,3 @@ jobs:
           slot-name: 'production'
           package: '*.jar'
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_742665e944f346619880744dc8b05bd7 }}
-      
-      - name: Run Java JAR
-        run: java -jar /path/to/your/JavaApp.jar
