@@ -24,23 +24,21 @@ import select.util.AuthenticationInterceptor;
 @Configuration
 public class MVCConfig implements WebMvcConfigurer {
     @Bean
-    public HandlerInterceptor authenticationInterceptor(){
-        return new AuthenticationInterceptor() ;
+    public HandlerInterceptor authenticationInterceptor() {
+        return new AuthenticationInterceptor();
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**")
-                .addResourceLocations("classpath:/static/") ;
+                .addResourceLocations("classpath:/static/");
     }
 
     @Override
-public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(authenticationInterceptor())
-            .addPathPatterns("/secure/*") // Adjust the path pattern as needed
-            .excludePathPatterns("/sys/user/loginCheck")
-            .excludePathPatterns("/sys/user/login")
-            .excludePathPatterns("/sys/user/insertOne"); 
-
+    public void addInterceptors(InterceptorRegistry registry) {
+        // Exclude the interceptor for all paths
+        registry.addInterceptor(authenticationInterceptor())
+                .excludePathPatterns("/**");
+    }
 }
 
-}
