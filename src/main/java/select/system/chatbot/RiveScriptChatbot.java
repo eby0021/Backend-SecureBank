@@ -15,8 +15,8 @@ public class RiveScriptChatbot {
 
     public RiveScriptChatbot() {
       bot = new RiveScript();
-
-    bot.loadDirectory("..\\src\\main\\java\\select\\system\\rivescript_files");
+        String currentDirectory = System.getProperty("user.dir");
+    bot.loadDirectory(currentDirectory+"\\src\\main\\java\\select\\system\\rivescript_files");
       bot.sortReplies();
 
     }
