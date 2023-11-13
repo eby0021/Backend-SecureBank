@@ -50,4 +50,4 @@ jobs:
           app-name: 'secure-bank'
           slot-name: 'Production'
           package: '*.jar'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_19446AFF7D084E3E80A963572BF8F70C }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BC11FC86DCB44DD88AF484DF44908D8D }}
