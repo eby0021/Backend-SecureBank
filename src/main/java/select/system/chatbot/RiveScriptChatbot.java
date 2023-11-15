@@ -32,8 +32,7 @@ public class RiveScriptChatbot {
         }
     }
     public String getBotResponse(String userMessage) {
-        // this.bot.sortReplies();
-      
+         this.bot.sortReplies();
         String response = bot.reply("console: ", userMessage);
         return response;
     }
