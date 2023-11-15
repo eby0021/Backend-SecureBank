@@ -23,7 +23,7 @@ public class RiveScriptChatbot {
     public RiveScriptChatbot() {
         bot = new RiveScript();
         try {
-            URL url = RiveScriptChatbot.class.getClassLoader().getResource("../rivescript_files/example.rive");
+            URL url = RiveScriptChatbot.class.getClassLoader().getResource("rivescript_files/example.rive");
             if (url != null) {
                 try (InputStream inputStream = url.openStream()) {
                     bot.loadInputStream(inputStream);
@@ -36,13 +36,6 @@ public class RiveScriptChatbot {
             e.printStackTrace();
         }
     }
-
-    private static String readInputStream(InputStream inputStream) {
-        try (Scanner scanner = new Scanner(inputStream).useDelimiter("\\A")) {
-            return scanner.hasNext() ? scanner.next() : "";
-        }
-    }
-
 
     public String getBotResponse(String userMessage) {
         // this.bot.sortReplies();
