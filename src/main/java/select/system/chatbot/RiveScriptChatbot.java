@@ -27,6 +27,7 @@ public class RiveScriptChatbot {
             if (url != null) {
                 try (InputStream inputStream = url.openStream()) {
                     bot.loadInputStream(inputStream);
+                    System.out.println("bot has been sorted");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -35,6 +36,8 @@ public class RiveScriptChatbot {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        String response = bot.reply("console: ", "hello");
+        System.out.println(response);
     }
 
     public String getBotResponse(String userMessage) {
