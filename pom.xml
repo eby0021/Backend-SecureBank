@@ -135,9 +135,6 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
-            <resource>
-            <directory>src/main/java/select/system/rivescript_files</directory>
-        </resource>
         </resources>
     </build>
 </project>

@@ -8,6 +8,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 public class RiveScriptChatbot {
 
@@ -19,13 +21,16 @@ public class RiveScriptChatbot {
         bot = new RiveScript();
         try {
             PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-            Resource[] resources = resolver.getResources("classpath*:select/system/rivescript_files/**");
+            Resource[] resources = resolver.getResources("classpath*:rivescript_files/**");
 
             for (Resource resource : resources) {
-                String relativePath = "classpath:" + resource.getURL().getPath();
-                bot.loadFile(relativePath);
+                try {
+                    String filePath = resource.getFile().getPath();
+                    bot.loadFile(filePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
             bot.sortReplies();
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,5 +40,12 @@ public class RiveScriptChatbot {
          this.bot.sortReplies();
         String response = bot.reply("console: ", userMessage);
         return response;
+    }
+
+    public static void main(String[] args) {
+        RiveScriptChatbot chatbot = new RiveScriptChatbot();
+        String userInput = "hello";
+        String botResponse = chatbot.getBotResponse(userInput);
+        System.out.println(botResponse);
     }
 }
